@@ -1,6 +1,7 @@
 package com.gauthamcity12.textscheduler;
 
 import android.app.Activity;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -9,11 +10,12 @@ import android.view.View;
 
 
 public class MainActivity extends Activity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        TextInfoStore textDB = new TextInfoStore(getBaseContext());
+        SQLiteDatabase db = textDB.getWritableDatabase();
     }
 
     @Override
@@ -39,6 +41,5 @@ public class MainActivity extends Activity {
     }
 
     public void saveTime(View view){
-
     }
 }
