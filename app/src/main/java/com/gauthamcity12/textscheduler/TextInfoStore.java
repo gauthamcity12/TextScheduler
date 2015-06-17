@@ -14,10 +14,11 @@ public class TextInfoStore extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "TextSchedulerDB.db";
     private static final String TABLE_NAME = "TextInfo";
     private static final String KEY_ID = "MessageID";
+    private static final String KEY_PHONE = "PhoneNumber";
     private static final String KEY_DATE = "Date";
     private static final String KEY_TIME = "Time";
     private static final String KEY_CONTENT = "Content";
-    private static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " (" + KEY_ID + " INTEGER PRIMARY KEY NOT NULL, " +
+    private static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " (" + KEY_ID + " INTEGER PRIMARY KEY NOT NULL, " + KEY_PHONE + " INTEGER NOT NULL, " +
             KEY_DATE + " DATE NOT NULL, " + KEY_TIME + " TIME NOT NULL, " + KEY_CONTENT + " VARCHAR(120) NOT NULL);";
 
     public TextInfoStore(Context context){
@@ -33,6 +34,7 @@ public class TextInfoStore extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // no version changes for now
+        db.execSQL("DROP TABLE IF EXISTS TextSchedulerDB");
         db.execSQL(CREATE_TABLE);
         onCreate(db);
     }

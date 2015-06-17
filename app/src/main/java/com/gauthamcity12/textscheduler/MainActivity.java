@@ -16,6 +16,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         TextInfoStore textDB = new TextInfoStore(getBaseContext());
         SQLiteDatabase db = textDB.getWritableDatabase();
+
     }
 
     @Override
