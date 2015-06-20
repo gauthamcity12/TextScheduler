@@ -23,14 +23,23 @@
     <TextView android:text="@string/instructions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"/>
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"/>
 
     <TimePicker
+        android:id="@+id/timepicker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:onClick="saveTime">
+        android:layout_gravity="center_horizontal">
     </TimePicker>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ok"
+        android:textColor="#FFFFFF"
+        android:background="#009688"
+        android:height="5dp"
+        android:onClick="@string/button_text"/>
 
 </LinearLayout>

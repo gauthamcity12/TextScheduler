@@ -1,22 +1,33 @@
 package com.gauthamcity12.textscheduler;
 
 import android.app.Activity;
+import android.app.TimePickerDialog;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TimePicker;
+import android.widget.Toast;
+
+import java.sql.Time;
 
 
 public class MainActivity extends Activity {
+    TextInfoStore textDB;
+    SQLiteDatabase db;
+    Object[] textInfo = new Object[5];
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        TextInfoStore textDB = new TextInfoStore(getBaseContext());
-        SQLiteDatabase db = textDB.getWritableDatabase();
+        textDB = new TextInfoStore(getBaseContext()); // initializing the db helper
+        db = textDB.getWritableDatabase(); // getting the database in a writeable state
 
+        TimePicker tpicker = (TimePicker)(findViewById(R.id.timepicker));
+        tpicker.setIs24HourView(false);
     }
 
     @Override
@@ -42,5 +53,9 @@ public class MainActivity extends Activity {
     }
 
     public void saveTime(View view){
+        TimePicker tpicker = (TimePicker)findViewById(R.id.timepicker);
+        int hour = tpicker.getCurrentHour();
+        int minute = tpicker.getCurrentMinute();
+        textInfo[3] = hour + ":" + minute;
     }
 }
