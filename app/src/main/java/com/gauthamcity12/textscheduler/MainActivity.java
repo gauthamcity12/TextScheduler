@@ -1,6 +1,7 @@
 package com.gauthamcity12.textscheduler;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.ActionBarActivity;
@@ -8,16 +9,21 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.sql.Time;
+import java.util.Calendar;
 
 
 public class MainActivity extends Activity {
     TextInfoStore textDB;
     SQLiteDatabase db;
     Object[] textInfo = new Object[5];
+    DatePickerDialog dpDialog;
+    TimePickerDialog tpDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,8 +32,6 @@ public class MainActivity extends Activity {
         textDB = new TextInfoStore(getBaseContext()); // initializing the db helper
         db = textDB.getWritableDatabase(); // getting the database in a writeable state
 
-        TimePicker tpicker = (TimePicker)(findViewById(R.id.timepicker));
-        tpicker.setIs24HourView(false);
     }
 
     @Override
@@ -53,9 +57,38 @@ public class MainActivity extends Activity {
     }
 
     public void saveTime(View view){
-        TimePicker tpicker = (TimePicker)findViewById(R.id.timepicker);
-        int hour = tpicker.getCurrentHour();
-        int minute = tpicker.getCurrentMinute();
-        textInfo[3] = hour + ":" + minute;
+        Calendar newCal = Calendar.getInstance();
+        tpDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                EditText timeSet = (EditText)findViewById(R.id.timeText);
+                int hour = hourOfDay;
+                textInfo[3] = hourOfDay+":"+minute; // sets the time portion of the text
+                if(hour > 12){
+                    hour -= 12;
+                }
+                timeSet.setText(hour+":"+minute);
+                timeSet.setVisibility(View.VISIBLE);
+                timeSet.setFocusable(false);
+            }
+        }, newCal.get(Calendar.HOUR_OF_DAY), newCal.get(Calendar.MINUTE), false);
+        tpDialog.show();
     }
+
+    public void saveDate(View view){
+        Calendar newCal = Calendar.getInstance();
+        dpDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                EditText dateSet = (EditText)findViewById(R.id.dateText);
+                String dateInfo = monthOfYear+" "+dayOfMonth+"'"+year;
+                textInfo[2] = dateInfo;
+                dateSet.setText(monthOfYear+"-"+dayOfMonth+"-"+year);
+                dateSet.setVisibility(View.VISIBLE);
+                dateSet.setFocusable(false);
+            }
+        }, newCal.get(Calendar.YEAR), newCal.get(Calendar.MONTH), newCal.get(Calendar.DAY_OF_MONTH));
+        dpDialog.show();
+    }
+
 }

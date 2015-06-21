@@ -4,6 +4,6 @@
     <string name="action_settings">Settings</string>
     <string name="welcome_message">Welcome to TextScheduler!</string>
     <string name="welcome_message2">A new way to plan your most important texts</string>
-    <string name="instructions">Please indicate what time you want to send the message</string>
+    <string name="instructions">Please indicate what date and time you want to send the message</string>
     <string name="button_text">Ok</string>
 </resources>

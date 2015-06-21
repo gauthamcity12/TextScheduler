@@ -1,3 +1,5 @@
+
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,7 +10,8 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:orientation="vertical"
     android:background="#FF7043"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:weightSum="1">
 
     <TextView android:text="@string/welcome_message"
         android:layout_width="wrap_content"
@@ -18,28 +21,57 @@
     <TextView android:text="@string/welcome_message2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingBottom="10dp"
         android:layout_gravity="center_horizontal" />
 
-    <TextView android:text="@string/instructions"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"/>
+        android:orientation="horizontal"
+        android:paddingBottom="10dp">
 
-    <TimePicker
-        android:id="@+id/timepicker"
-        android:layout_width="wrap_content"
+        <Button android:id="@+id/dateButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Set Date"
+            android:textColor="#FFFFFF"
+            android:background="#009688"
+            android:height="5dp"
+            android:layout_alignParentLeft="true"
+            android:onClick="saveDate"/>
+
+        <Button android:id="@+id/timeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Set Time"
+            android:textColor="#FFFFFF"
+            android:background="#009688"
+            android:height="5dp"
+            android:layout_alignParentRight="true"
+            android:onClick="saveTime"/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal">
-    </TimePicker>
+        android:orientation="horizontal"
+        android:paddingBottom="10dp">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Ok"
-        android:textColor="#FFFFFF"
-        android:background="#009688"
-        android:height="5dp"
-        android:onClick="@string/button_text"/>
+        <EditText android:id="@+id/dateText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="#FFFFFF"
+            android:layout_marginTop="5dp"
+            android:visibility="invisible"
+            android:layout_alignParentStart="true"/>
 
+        <EditText android:id="@+id/timeText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="#FFFFFF"
+            android:layout_marginTop="5dp"
+            android:visibility="invisible"
+            android:layout_alignParentEnd="true"/>
+    </RelativeLayout>
 </LinearLayout>
