@@ -3,7 +3,9 @@ package com.gauthamcity12.textscheduler;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.provider.ContactsContract;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -24,6 +26,7 @@ public class MainActivity extends Activity {
     Object[] textInfo = new Object[5];
     DatePickerDialog dpDialog;
     TimePickerDialog tpDialog;
+    int PICK_CONTACT = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,14 +84,33 @@ public class MainActivity extends Activity {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 EditText dateSet = (EditText)findViewById(R.id.dateText);
-                String dateInfo = monthOfYear+" "+dayOfMonth+"'"+year;
+                int yearSet = year;
+                int monthSet = monthOfYear;
+                int daySet = dayOfMonth;
+
+
+
+                if(dayOfMonth < Calendar.getInstance().get(Calendar.DAY_OF_MONTH) || monthOfYear < Calendar.getInstance().get(Calendar.MONTH) || year < Calendar.getInstance().get(Calendar.YEAR)){
+                    yearSet = Calendar.getInstance().get(Calendar.YEAR);
+                    monthSet = Calendar.getInstance().get(Calendar.MONTH);
+                    daySet = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+                    Toast.makeText(getBaseContext(), "Not a valid date, please set again", Toast.LENGTH_SHORT).show();
+                }
+                String dateInfo = monthSet+" "+daySet+"'"+yearSet;
+
                 textInfo[2] = dateInfo;
-                dateSet.setText(monthOfYear+"-"+dayOfMonth+"-"+year);
+                dateSet.setText(monthSet+"-"+daySet+"-"+yearSet);
                 dateSet.setVisibility(View.VISIBLE);
                 dateSet.setFocusable(false);
             }
         }, newCal.get(Calendar.YEAR), newCal.get(Calendar.MONTH), newCal.get(Calendar.DAY_OF_MONTH));
         dpDialog.show();
     }
+
+    public void saveContact(View view){
+        Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+        startActivityForResult(intent, PICK_CONTACT);
+    }
+
 
 }
