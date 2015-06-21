@@ -4,9 +4,10 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.provider.ContactsContract;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,8 +16,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
-
-import java.sql.Time;
 import java.util.Calendar;
 
 
@@ -112,5 +111,41 @@ public class MainActivity extends Activity {
         startActivityForResult(intent, PICK_CONTACT);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        EditText cText = (EditText)findViewById(R.id.contactText);
+        String name = "";
+        String contactID = "";
 
+        if(requestCode == PICK_CONTACT){
+            if(resultCode == RESULT_OK){
+                Uri contactUri = data.getData();
+                Cursor c = getContentResolver().query(contactUri, null, null, null, null);
+                if(c.moveToFirst())
+                {
+                    contactID = c.getString(c.getColumnIndex(ContactsContract.Contacts._ID));
+                    name = c.getString(c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                }
+
+                cText.setText(name); /// sets the contact name on the edit text box
+                cText.setVisibility(View.VISIBLE);
+                cText.setFocusable(false);
+
+                Cursor phones = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
+                        ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactID, null, null);
+                while (phones.moveToNext()) {
+                    String number = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                    int type = phones.getInt(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE));
+                    switch (type) {
+                        case ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE:
+                            textInfo[1] = number;
+                            Toast.makeText(getBaseContext(), number, Toast.LENGTH_SHORT).show();
+                            break;
+                    }
+                }
+                phones.close();
+                c.close();
+            }
+        }
+    }
 }
