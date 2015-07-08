@@ -1,6 +1,7 @@
 package com.gauthamcity12.textscheduler;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -87,8 +89,6 @@ public class MainActivity extends Activity {
                 int monthSet = monthOfYear;
                 int daySet = dayOfMonth;
 
-
-
                 if(dayOfMonth < Calendar.getInstance().get(Calendar.DAY_OF_MONTH) || monthOfYear < Calendar.getInstance().get(Calendar.MONTH) || year < Calendar.getInstance().get(Calendar.YEAR)){
                     yearSet = Calendar.getInstance().get(Calendar.YEAR);
                     monthSet = Calendar.getInstance().get(Calendar.MONTH);
@@ -105,6 +105,17 @@ public class MainActivity extends Activity {
         }, newCal.get(Calendar.YEAR), newCal.get(Calendar.MONTH), newCal.get(Calendar.DAY_OF_MONTH));
         dpDialog.show();
     }
+
+    public void saveMessage(View view){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Message Content");
+
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        builder.setView(input);
+    }
+
+
 
     public void saveContact(View view){
         Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
