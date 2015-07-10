@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.os.Bundle;
+import android.telephony.SmsManager;
 import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -106,13 +107,10 @@ public class MainActivity extends Activity {
         dpDialog.show();
     }
 
-    public void saveMessage(View view){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Message Content");
-
-        final EditText input = new EditText(this);
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
-        builder.setView(input);
+    public void saveMessage(View view){ // TODO: change below code, used only to check if texts sent
+        EditText messageText = (EditText)findViewById(R.id.messageText);
+        SmsManager smsManager = SmsManager.getDefault();
+        smsManager.sendTextMessage((String)textInfo[1], null, messageText.getText().toString(), null, null);
     }
 
 
@@ -149,7 +147,7 @@ public class MainActivity extends Activity {
                     int type = phones.getInt(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE));
                     switch (type) {
                         case ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE:
-                            textInfo[1] = number;
+                            textInfo[1] = number; // saves the contact's phone number
                             Toast.makeText(getBaseContext(), number, Toast.LENGTH_SHORT).show();
                             break;
                     }
