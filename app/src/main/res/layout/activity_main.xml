@@ -11,17 +11,20 @@
     android:orientation="vertical"
     android:background="#FF7043"
     tools:context=".MainActivity"
-    android:weightSum="1">
+    android:weightSum="1"
+    android:id="@+id/MainLayout">
 
     <TextView android:text="@string/welcome_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="#FFFFFF"
         android:layout_gravity="center_horizontal" />
 
     <TextView android:text="@string/welcome_message2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingBottom="10dp"
+        android:textColor="#FFFFFF"
         android:layout_gravity="center_horizontal" />
 
     <RelativeLayout
@@ -103,35 +106,26 @@
             android:layout_alignParentEnd="true"/>
     </RelativeLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
+    <EditText android:id="@+id/messageText"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingBottom="10dp">
+        android:text="Enter Message Text"
+        android:textColor="#FFFFFF"
+        android:layout_marginTop="5dp"
+        android:maxLength="200"
+        android:maxLines="4"
+        android:selectAllOnFocus="true"
+        android:layout_gravity="center_horizontal" />
 
-        <Button android:id="@+id/messageButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Set MessageText"
-            android:textColor="#FFFFFF"
-            android:background="#009688"
-            android:height="5dp"
-            android:onClick="saveMessage"
-            android:padding="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" />
-
-        <EditText android:id="@+id/messageText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:textColor="#FFFFFF"
-            android:layout_marginTop="5dp"
-            android:visibility="invisible"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentEnd="true"/>
-    </RelativeLayout>
+    <Button android:id="@+id/messageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Set MessageText"
+        android:textColor="#FFFFFF"
+        android:background="#009688"
+        android:onClick="saveMessage"
+        android:padding="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_gravity="center_horizontal"/>
 
 </LinearLayout>
