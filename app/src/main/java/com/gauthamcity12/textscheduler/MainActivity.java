@@ -27,6 +27,7 @@ public class MainActivity extends Activity {
     SQLiteDatabase db;
     Object[] textInfo = new Object[5];
     boolean isToday = false;
+    boolean isNow = false;
     /* Information Stored at Each Index
     * 0) Session ID
     * 1) Phone #
@@ -75,11 +76,12 @@ public class MainActivity extends Activity {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 EditText timeSet = (EditText)findViewById(R.id.timeText);
+                Calendar currentCal = Calendar.getInstance();
                 if(textInfo[2] == null){
                     Toast.makeText(getBaseContext(), "Please choose a date first", Toast.LENGTH_SHORT).show();
                 }
                 else{
-                    if(isToday && (hourOfDay < Calendar.getInstance().get(Calendar.HOUR_OF_DAY) || (hourOfDay > Calendar.getInstance().get(Calendar.HOUR_OF_DAY) && minute < Calendar.getInstance().get(Calendar.MINUTE)))){
+                    if(isToday && (hourOfDay < currentCal.get(Calendar.HOUR_OF_DAY) || (hourOfDay > currentCal.get(Calendar.HOUR_OF_DAY) && minute < currentCal.get(Calendar.MINUTE)))){
                         hourOfDay = Calendar.getInstance().get(Calendar.HOUR);
                         minute = Calendar.getInstance().get(Calendar.MINUTE);
                         Toast.makeText(getBaseContext(), "Not a valid time, please set again.", Toast.LENGTH_SHORT).show();
@@ -88,6 +90,9 @@ public class MainActivity extends Activity {
                     textInfo[3] = hourOfDay+":"+minute; // sets the time portion of the text
                     if(hour > 12){
                         hour -= 12;
+                    }
+                    if(isToday && hour == currentCal.get(Calendar.HOUR_OF_DAY) && minute == currentCal.get(Calendar.MINUTE)){
+                        isNow = true;
                     }
                     timeSet.setText(hour+":"+minute);
                     timeSet.setVisibility(View.VISIBLE);
@@ -142,10 +147,15 @@ public class MainActivity extends Activity {
             EditText messageText = (EditText)findViewById(R.id.messageText);
             textInfo[4] = messageText.getText().toString(); // save the message text
             SmsManager smsManager = SmsManager.getDefault();
-            smsManager.sendTextMessage((String)textInfo[1], null, messageText.getText().toString(), null, null);
 
             // Schedule the Text Message
-            
+            if(isNow){
+                smsManager.sendTextMessage((String)textInfo[1], null, messageText.getText().toString(), null, null); // no need to schedule text
+                Toast.makeText(getBaseContext(), "Sending text now...", Toast.LENGTH_SHORT).show();
+            }
+            else{
+
+            }
         }
 
     }
