@@ -26,6 +26,14 @@ public class MainActivity extends Activity {
     TextInfoStore textDB;
     SQLiteDatabase db;
     Object[] textInfo = new Object[5];
+    boolean isToday = false;
+    /* Information Stored at Each Index
+    * 0) Session ID
+    * 1) Phone #
+    * 2) Date
+    * 3) Time
+    * 4) Message Content
+     */
     DatePickerDialog dpDialog;
     TimePickerDialog tpDialog;
     int PICK_CONTACT = 1;
@@ -67,14 +75,25 @@ public class MainActivity extends Activity {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 EditText timeSet = (EditText)findViewById(R.id.timeText);
-                int hour = hourOfDay;
-                textInfo[3] = hourOfDay+":"+minute; // sets the time portion of the text
-                if(hour > 12){
-                    hour -= 12;
+                if(textInfo[2] == null){
+                    Toast.makeText(getBaseContext(), "Please choose a date first", Toast.LENGTH_SHORT).show();
                 }
-                timeSet.setText(hour+":"+minute);
-                timeSet.setVisibility(View.VISIBLE);
-                timeSet.setFocusable(false);
+                else{
+                    if(isToday && (hourOfDay < Calendar.getInstance().get(Calendar.HOUR_OF_DAY) || (hourOfDay > Calendar.getInstance().get(Calendar.HOUR_OF_DAY) && minute < Calendar.getInstance().get(Calendar.MINUTE)))){
+                        hourOfDay = Calendar.getInstance().get(Calendar.HOUR);
+                        minute = Calendar.getInstance().get(Calendar.MINUTE);
+                        Toast.makeText(getBaseContext(), "Not a valid time, please set again.", Toast.LENGTH_SHORT).show();
+                    }
+                    int hour = hourOfDay;
+                    textInfo[3] = hourOfDay+":"+minute; // sets the time portion of the text
+                    if(hour > 12){
+                        hour -= 12;
+                    }
+                    timeSet.setText(hour+":"+minute);
+                    timeSet.setVisibility(View.VISIBLE);
+                    timeSet.setFocusable(false);
+                }
+
             }
         }, newCal.get(Calendar.HOUR_OF_DAY), newCal.get(Calendar.MINUTE), false);
         tpDialog.show();
@@ -85,15 +104,23 @@ public class MainActivity extends Activity {
         dpDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                Calendar currentCal = Calendar.getInstance();
                 EditText dateSet = (EditText)findViewById(R.id.dateText);
                 int yearSet = year;
                 int monthSet = monthOfYear;
                 int daySet = dayOfMonth;
+                if(yearSet == currentCal.get(Calendar.YEAR) && monthOfYear == currentCal.get(Calendar.MONTH) && daySet == currentCal.get(Calendar.DAY_OF_MONTH)){
+                    isToday = true;
+                }
+                else{
+                    isToday = false;
+                }
 
-                if(dayOfMonth < Calendar.getInstance().get(Calendar.DAY_OF_MONTH) || monthOfYear < Calendar.getInstance().get(Calendar.MONTH) || year < Calendar.getInstance().get(Calendar.YEAR)){
-                    yearSet = Calendar.getInstance().get(Calendar.YEAR);
-                    monthSet = Calendar.getInstance().get(Calendar.MONTH);
-                    daySet = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+                if(dayOfMonth < currentCal.get(Calendar.DAY_OF_MONTH) || monthOfYear < currentCal.get(Calendar.MONTH) || year < currentCal.get(Calendar.YEAR)){
+                    yearSet = currentCal.get(Calendar.YEAR);
+                    monthSet = currentCal.get(Calendar.MONTH);
+                    daySet = currentCal.get(Calendar.DAY_OF_MONTH);
+                    isToday = true;
                     Toast.makeText(getBaseContext(), "Not a valid date, please set again", Toast.LENGTH_SHORT).show();
                 }
                 String dateInfo = monthSet+" "+daySet+"'"+yearSet;
@@ -107,10 +134,17 @@ public class MainActivity extends Activity {
         dpDialog.show();
     }
 
-    public void saveMessage(View view){ // TODO: change below code, used only to check if texts sent
-        EditText messageText = (EditText)findViewById(R.id.messageText);
-        SmsManager smsManager = SmsManager.getDefault();
-        smsManager.sendTextMessage((String)textInfo[1], null, messageText.getText().toString(), null, null);
+    public void saveMessage(View view){ // TODO: change below code, currently used only to check if texts sent
+        if(textInfo[1] == null){ // Error check to verify a contact was chosen before message is sent
+            Toast.makeText(getBaseContext(), "Please Choose a Contact to Text", Toast.LENGTH_SHORT).show();
+
+        }
+        else{
+            EditText messageText = (EditText)findViewById(R.id.messageText);
+            SmsManager smsManager = SmsManager.getDefault();
+            smsManager.sendTextMessage((String)textInfo[1], null, messageText.getText().toString(), null, null);
+        }
+
     }
 
 
