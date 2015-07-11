@@ -137,17 +137,18 @@ public class MainActivity extends Activity {
     public void saveMessage(View view){ // TODO: change below code, currently used only to check if texts sent
         if(textInfo[1] == null){ // Error check to verify a contact was chosen before message is sent
             Toast.makeText(getBaseContext(), "Please Choose a Contact to Text", Toast.LENGTH_SHORT).show();
-
         }
         else{
             EditText messageText = (EditText)findViewById(R.id.messageText);
+            textInfo[4] = messageText.getText().toString(); // save the message text
             SmsManager smsManager = SmsManager.getDefault();
             smsManager.sendTextMessage((String)textInfo[1], null, messageText.getText().toString(), null, null);
+
+            // Schedule the Text Message
+            
         }
 
     }
-
-
 
     public void saveContact(View view){
         Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
