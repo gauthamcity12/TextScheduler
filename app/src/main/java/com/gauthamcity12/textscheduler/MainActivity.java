@@ -1,8 +1,10 @@
 package com.gauthamcity12.textscheduler;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.database.Cursor;
@@ -28,6 +30,10 @@ public class MainActivity extends Activity {
     Object[] textInfo = new Object[5];
     boolean isToday = false;
     boolean isNow = false;
+    int yearSet;
+    int monthSet;
+    int daySet;
+    Calendar infoCal = Calendar.getInstance();
     /* Information Stored at Each Index
     * 0) Session ID
     * 1) Phone #
@@ -94,6 +100,7 @@ public class MainActivity extends Activity {
                     if(isToday && hour == currentCal.get(Calendar.HOUR_OF_DAY) && minute == currentCal.get(Calendar.MINUTE)){
                         isNow = true;
                     }
+                    infoCal.set(yearSet, monthSet, daySet, hourOfDay, minute, 0); // sets global calendar for alarm
                     timeSet.setText(hour+":"+minute);
                     timeSet.setVisibility(View.VISIBLE);
                     timeSet.setFocusable(false);
@@ -111,9 +118,9 @@ public class MainActivity extends Activity {
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 Calendar currentCal = Calendar.getInstance();
                 EditText dateSet = (EditText)findViewById(R.id.dateText);
-                int yearSet = year;
-                int monthSet = monthOfYear;
-                int daySet = dayOfMonth;
+                yearSet = year;
+                monthSet = monthOfYear;
+                daySet = dayOfMonth;
                 if(yearSet == currentCal.get(Calendar.YEAR) && monthOfYear == currentCal.get(Calendar.MONTH) && daySet == currentCal.get(Calendar.DAY_OF_MONTH)){
                     isToday = true;
                 }
@@ -143,18 +150,27 @@ public class MainActivity extends Activity {
         if(textInfo[1] == null){ // Error check to verify a contact was chosen before message is sent
             Toast.makeText(getBaseContext(), "Please Choose a Contact to Text", Toast.LENGTH_SHORT).show();
         }
-        else{
+        else{ // if all the proper information is inputted by the user
             EditText messageText = (EditText)findViewById(R.id.messageText);
             textInfo[4] = messageText.getText().toString(); // save the message text
             SmsManager smsManager = SmsManager.getDefault();
 
             // Schedule the Text Message
-            if(isNow){
-                smsManager.sendTextMessage((String)textInfo[1], null, messageText.getText().toString(), null, null); // no need to schedule text
+            if(isNow){ // no need to schedule text, text is being sent now
+                smsManager.sendTextMessage((String)textInfo[1], null, messageText.getText().toString(), null, null);
                 Toast.makeText(getBaseContext(), "Sending text now...", Toast.LENGTH_SHORT).show();
             }
             else{
+                Intent textIntent = new Intent(this, TextScheduleReceiver.class);
+                int counter = 0;
+                for(Object s : textInfo){
+                    textIntent.putExtra("Text Info: "+counter, (String)s);
+                    counter++;
+                }
+                PendingIntent pendingText = PendingIntent.getBroadcast(this, 1, textIntent, 0);
 
+                AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+                alarmManager.set(alarmManager.RTC_WAKEUP, infoCal.getTimeInMillis(), pendingText); // sets the alarm at the specified date and time
             }
         }
 
