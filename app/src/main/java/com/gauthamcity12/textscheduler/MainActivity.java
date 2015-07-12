@@ -160,7 +160,7 @@ public class MainActivity extends Activity {
                 smsManager.sendTextMessage((String)textInfo[1], null, messageText.getText().toString(), null, null);
                 Toast.makeText(getBaseContext(), "Sending text now...", Toast.LENGTH_SHORT).show();
             }
-            else{
+            else{ // Text message is being scheduled using Alarm Manager
                 Intent textIntent = new Intent(this, TextScheduleReceiver.class);
                 int counter = 0;
                 for(Object s : textInfo){
