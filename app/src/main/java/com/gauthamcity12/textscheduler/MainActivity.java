@@ -17,11 +17,13 @@ import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import java.util.Calendar;
+import java.util.Random;
 
 
 public class MainActivity extends Activity {
@@ -34,6 +36,7 @@ public class MainActivity extends Activity {
     int monthSet;
     int daySet;
     Calendar infoCal = Calendar.getInstance();
+    Random rand = new Random(10000);
     /* Information Stored at Each Index
     * 0) Session ID
     * 1) Phone #
@@ -146,7 +149,8 @@ public class MainActivity extends Activity {
         dpDialog.show();
     }
 
-    public void saveMessage(View view){ // TODO: change below code, currently used only to check if texts sent
+    public void saveMessage(View view){
+
         if(textInfo[1] == null){ // Error check to verify a contact was chosen before message is sent
             Toast.makeText(getBaseContext(), "Please Choose a Contact to Text", Toast.LENGTH_SHORT).show();
         }
@@ -167,12 +171,13 @@ public class MainActivity extends Activity {
                     textIntent.putExtra("Text Info: "+counter, (String)s);
                     counter++;
                 }
-                PendingIntent pendingText = PendingIntent.getBroadcast(this, 1, textIntent, 0);
+
+                PendingIntent pendingText = PendingIntent.getBroadcast(this, rand.nextInt(), textIntent, 0); // creates a new intent with different request codes
 
                 AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
                 alarmManager.set(alarmManager.RTC_WAKEUP, infoCal.getTimeInMillis(), pendingText); // sets the alarm at the specified date and time
             }
-            Toast.makeText(getBaseContext(), "Text has been scheduled", Toast.LENGTH_SHORT).show(); // Indicate Message has been scheduled
+            Toast.makeText(getBaseContext(), "Text has been scheduled", Toast.LENGTH_SHORT).show(); // Indicate Message has been schedule
         }
 
     }
