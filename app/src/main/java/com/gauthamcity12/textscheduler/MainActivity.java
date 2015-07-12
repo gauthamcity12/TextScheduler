@@ -163,7 +163,7 @@ public class MainActivity extends Activity {
             else{ // Text message is being scheduled using Alarm Manager
                 Intent textIntent = new Intent(this, TextScheduleReceiver.class);
                 int counter = 0;
-                for(Object s : textInfo){
+                for(Object s : textInfo){ // append all textInformation to Intent
                     textIntent.putExtra("Text Info: "+counter, (String)s);
                     counter++;
                 }
@@ -172,6 +172,7 @@ public class MainActivity extends Activity {
                 AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
                 alarmManager.set(alarmManager.RTC_WAKEUP, infoCal.getTimeInMillis(), pendingText); // sets the alarm at the specified date and time
             }
+            Toast.makeText(getBaseContext(), "Text has been scheduled", Toast.LENGTH_SHORT).show(); // Indicate Message has been scheduled
         }
 
     }
