@@ -54,7 +54,15 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         textDB = new TextInfoStore(getBaseContext()); // initializing the db helper
         db = textDB.getWritableDatabase(); // getting the database in a writeable state
+        Button dateSet = (Button)findViewById(R.id.dateButton);
+        Button timeSet = (Button)findViewById(R.id.timeButton);
+        Button contactSet = (Button)findViewById(R.id.contactButton);
+        Button messageSet = (Button)findViewById(R.id.messageButton);
 
+        dateSet.setOnTouchListener(new ButtonTouchListener());
+        timeSet.setOnTouchListener(new ButtonTouchListener());
+        contactSet.setOnTouchListener(new ButtonTouchListener());
+        messageSet.setOnTouchListener(new ButtonTouchListener());
     }
 
     @Override
@@ -90,7 +98,7 @@ public class MainActivity extends Activity {
                     Toast.makeText(getBaseContext(), "Please choose a date first", Toast.LENGTH_SHORT).show();
                 }
                 else{
-                    if(isToday && (hourOfDay < currentCal.get(Calendar.HOUR_OF_DAY) || (hourOfDay > currentCal.get(Calendar.HOUR_OF_DAY) && minute < currentCal.get(Calendar.MINUTE)))){
+                    if(isToday && (hourOfDay < currentCal.get(Calendar.HOUR_OF_DAY) || (hourOfDay == currentCal.get(Calendar.HOUR_OF_DAY) && minute < currentCal.get(Calendar.MINUTE)))){
                         hourOfDay = Calendar.getInstance().get(Calendar.HOUR);
                         minute = Calendar.getInstance().get(Calendar.MINUTE);
                         Toast.makeText(getBaseContext(), "Not a valid time, please set again.", Toast.LENGTH_SHORT).show();
@@ -171,8 +179,7 @@ public class MainActivity extends Activity {
                     textIntent.putExtra("Text Info: "+counter, (String)s);
                     counter++;
                 }
-
-                PendingIntent pendingText = PendingIntent.getBroadcast(this, rand.nextInt(), textIntent, 0); // creates a new intent with different request codes
+                PendingIntent pendingText = PendingIntent.getBroadcast(this, rand.nextInt(), textIntent, 0); // creates a new intent with unique request codes
 
                 AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
                 alarmManager.set(alarmManager.RTC_WAKEUP, infoCal.getTimeInMillis(), pendingText); // sets the alarm at the specified date and time

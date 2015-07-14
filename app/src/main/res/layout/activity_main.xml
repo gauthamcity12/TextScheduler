@@ -31,6 +31,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:elevation="5dp"
+        android:clipToPadding="false"
         android:paddingBottom="10dp">
 
         <Button android:id="@+id/dateButton"
@@ -39,8 +41,8 @@
             android:text="Set Date"
             android:textColor="#FFFFFF"
             android:background="#009688"
-            android:height="5dp"
             android:layout_alignParentLeft="true"
+            android:elevation="10dp"
             android:onClick="saveDate"/>
 
         <Button android:id="@+id/timeButton"
@@ -49,7 +51,6 @@
             android:text="Set Time"
             android:textColor="#FFFFFF"
             android:background="#009688"
-            android:height="5dp"
             android:layout_alignParentRight="true"
             android:onClick="saveTime"/>
     </RelativeLayout>
@@ -83,6 +84,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:clipToPadding="false"
+        android:elevation="10dp"
         android:paddingBottom="10dp">
 
         <Button android:id="@+id/contactButton"
@@ -91,7 +94,6 @@
             android:text="Set Contact"
             android:textColor="#FFFFFF"
             android:background="#009688"
-            android:height="5dp"
             android:onClick="saveContact"
             android:padding="5dp"
             android:layout_alignParentStart="true"/>
