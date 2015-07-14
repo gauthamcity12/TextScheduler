@@ -59,6 +59,7 @@ public class MainActivity extends Activity {
         Button contactSet = (Button)findViewById(R.id.contactButton);
         Button messageSet = (Button)findViewById(R.id.messageButton);
 
+        // sets the onTouch coloring for each of the buttons on the screen
         dateSet.setOnTouchListener(new ButtonTouchListener());
         timeSet.setOnTouchListener(new ButtonTouchListener());
         contactSet.setOnTouchListener(new ButtonTouchListener());
@@ -94,6 +95,7 @@ public class MainActivity extends Activity {
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 EditText timeSet = (EditText)findViewById(R.id.timeText);
                 Calendar currentCal = Calendar.getInstance();
+                String phase = "";
                 if(textInfo[2] == null){
                     Toast.makeText(getBaseContext(), "Please choose a date first", Toast.LENGTH_SHORT).show();
                 }
@@ -104,15 +106,24 @@ public class MainActivity extends Activity {
                         Toast.makeText(getBaseContext(), "Not a valid time, please set again.", Toast.LENGTH_SHORT).show();
                     }
                     int hour = hourOfDay;
+                    String min = "";
+                    if(minute < 10){
+                        min = "0"+minute; // formats the time properly if minute int is less than 10
+                    }
+                    else{
+                        min = ""+minute;
+                    }
                     textInfo[3] = hourOfDay+":"+minute; // sets the time portion of the text
                     if(hour > 12){
+                        phase = " PM";
                         hour -= 12;
                     }
                     if(isToday && hour == currentCal.get(Calendar.HOUR_OF_DAY) && minute == currentCal.get(Calendar.MINUTE)){
                         isNow = true;
                     }
                     infoCal.set(yearSet, monthSet, daySet, hourOfDay, minute, 0); // sets global calendar for alarm
-                    timeSet.setText(hour+":"+minute);
+
+                    timeSet.setText(hour+":"+min+phase);
                     timeSet.setVisibility(View.VISIBLE);
                     timeSet.setFocusable(false);
                 }
