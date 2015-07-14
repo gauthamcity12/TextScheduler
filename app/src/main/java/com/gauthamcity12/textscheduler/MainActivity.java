@@ -30,6 +30,7 @@ public class MainActivity extends Activity {
     TextInfoStore textDB;
     SQLiteDatabase db;
     Object[] textInfo = new Object[5];
+    Button messageSet;
     boolean isToday = false;
     boolean isNow = false;
     int yearSet;
@@ -57,7 +58,7 @@ public class MainActivity extends Activity {
         Button dateSet = (Button)findViewById(R.id.dateButton);
         Button timeSet = (Button)findViewById(R.id.timeButton);
         Button contactSet = (Button)findViewById(R.id.contactButton);
-        Button messageSet = (Button)findViewById(R.id.messageButton);
+        messageSet = (Button)findViewById(R.id.messageButton);
 
         // sets the onTouch coloring for each of the buttons on the screen
         dateSet.setOnTouchListener(new ButtonTouchListener());
@@ -169,7 +170,7 @@ public class MainActivity extends Activity {
     }
 
     public void saveMessage(View view){
-
+        messageSet.setFocusable(true); // pulls the focus off of the edit text
         if(textInfo[1] == null){ // Error check to verify a contact was chosen before message is sent
             Toast.makeText(getBaseContext(), "Please Choose a Contact to Text", Toast.LENGTH_SHORT).show();
         }
