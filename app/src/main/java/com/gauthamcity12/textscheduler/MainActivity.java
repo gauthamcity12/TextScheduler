@@ -82,7 +82,7 @@ public class MainActivity extends Activity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.viewScheduled) {
             return true;
         }
 
@@ -186,7 +186,7 @@ public class MainActivity extends Activity {
                 isNow = false; // resets the variable
             }
             else{ // Text message is being scheduled using Alarm Manager
-                Intent textIntent = new Intent(this, WakeLocker.class);
+                Intent textIntent = new Intent(this, WakeLocker.class); // Intent to go to the wakeful broadcast receiver
                 int counter = 0;
                 for(Object s : textInfo){ // append all textInformation to Intent
                     textIntent.putExtra("Text Info: "+counter, (String)s);

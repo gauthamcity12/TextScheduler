@@ -17,6 +17,6 @@ public class WakeLocker extends WakefulBroadcastReceiver{
         for(int i = 0; i < 5; i++){
             service.putExtra("Text Info: "+i, intent.getStringExtra("Text Info: "+i)); // repopulating the extras into the new intent
         }
-        startWakefulService(context, service);
+        startWakefulService(context, service); // Holds a wake lock until the service is complete
         }
 }

@@ -34,7 +34,7 @@ public class TextScheduleService extends IntentService {
             textInfo[i] = intent.getStringExtra("Text Info: "+i);
         }
         SmsManager smsManager = SmsManager.getDefault();
-        smsManager.sendTextMessage(textInfo[1], null, textInfo[4], null, null);
+        smsManager.sendTextMessage(textInfo[1], null, textInfo[4], null, null); // sends the actual text
 
         WakeLocker.completeWakefulIntent(intent); // Closes the WakeLock after the service is performed
     }
