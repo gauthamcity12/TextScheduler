@@ -183,9 +183,10 @@ public class MainActivity extends Activity {
             if(isNow){ // no need to schedule text, text is being sent now
                 smsManager.sendTextMessage((String)textInfo[1], null, messageText.getText().toString(), null, null);
                 Toast.makeText(getBaseContext(), "Sending text now...", Toast.LENGTH_SHORT).show();
+                isNow = false; // resets the variable
             }
             else{ // Text message is being scheduled using Alarm Manager
-                Intent textIntent = new Intent(this, TextScheduleReceiver.class);
+                Intent textIntent = new Intent(this, WakeLocker.class);
                 int counter = 0;
                 for(Object s : textInfo){ // append all textInformation to Intent
                     textIntent.putExtra("Text Info: "+counter, (String)s);
