@@ -29,7 +29,15 @@ import java.util.Random;
 public class MainActivity extends Activity {
     TextInfoStore textDB;
     SQLiteDatabase db;
-    Object[] textInfo = new Object[5];
+    Object[] textInfo = new Object[6];
+    /* Information Stored at Each Index
+    * 0) Session ID
+    * 1) Phone #
+    * 2) Date
+    * 3) Time
+    * 4) Message Content
+    * 5) Message Recipient
+     */
     Button messageSet;
     boolean isToday = false;
     boolean isNow = false;
@@ -38,13 +46,6 @@ public class MainActivity extends Activity {
     int daySet;
     Calendar infoCal = Calendar.getInstance();
     Random rand = new Random(10000);
-    /* Information Stored at Each Index
-    * 0) Session ID
-    * 1) Phone #
-    * 2) Date
-    * 3) Time
-    * 4) Message Content
-     */
     DatePickerDialog dpDialog;
     TimePickerDialog tpDialog;
     int PICK_CONTACT = 1;
@@ -221,6 +222,7 @@ public class MainActivity extends Activity {
                 {
                     contactID = c.getString(c.getColumnIndex(ContactsContract.Contacts._ID));
                     name = c.getString(c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                    textInfo[5] = name;
                 }
 
                 cText.setText(name); /// sets the contact name on the edit text box
