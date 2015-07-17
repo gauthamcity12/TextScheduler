@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -17,19 +18,23 @@ import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.textservice.TextInfo;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
+
 import java.util.Calendar;
 import java.util.Random;
 
 
 public class MainActivity extends Activity {
-    TextInfoStore textDB;
-    SQLiteDatabase db;
-    Object[] textInfo = new Object[6];
+    private static TextInfoStore textDB;
+    private static SQLiteDatabase db;
+    private Object[] textInfo = new Object[7];
     /* Information Stored at Each Index
     * 0) Session ID
     * 1) Phone #
@@ -37,18 +42,19 @@ public class MainActivity extends Activity {
     * 3) Time
     * 4) Message Content
     * 5) Message Recipient
+    * 6) Text Sent (True or False)
      */
-    Button messageSet;
-    boolean isToday = false;
-    boolean isNow = false;
-    int yearSet;
-    int monthSet;
-    int daySet;
-    Calendar infoCal = Calendar.getInstance();
-    Random rand = new Random(10000);
-    DatePickerDialog dpDialog;
-    TimePickerDialog tpDialog;
-    int PICK_CONTACT = 1;
+    private Button messageSet;
+    private boolean isToday = false;
+    private boolean isNow = false;
+    private int yearSet;
+    private int monthSet;
+    private int daySet;
+    private Calendar infoCal = Calendar.getInstance();
+    private Random rand = new Random(10000);
+    private DatePickerDialog dpDialog;
+    private TimePickerDialog tpDialog;
+    private int PICK_CONTACT = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,10 +62,12 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         textDB = new TextInfoStore(getBaseContext()); // initializing the db helper
         db = textDB.getWritableDatabase(); // getting the database in a writeable state
+
         Button dateSet = (Button)findViewById(R.id.dateButton);
         Button timeSet = (Button)findViewById(R.id.timeButton);
         Button contactSet = (Button)findViewById(R.id.contactButton);
         messageSet = (Button)findViewById(R.id.messageButton);
+        textInfo[6] = "false"; // presets the text status as not Sent
 
         // sets the onTouch coloring for each of the buttons on the screen
         dateSet.setOnTouchListener(new ButtonTouchListener());
@@ -120,12 +128,16 @@ public class MainActivity extends Activity {
                         phase = " PM";
                         hour -= 12;
                     }
+                    if(hour == 0){
+                        hour = 12;
+                    }
                     if(isToday && hour == currentCal.get(Calendar.HOUR_OF_DAY) && minute == currentCal.get(Calendar.MINUTE)){
                         isNow = true;
                     }
                     infoCal.set(yearSet, monthSet, daySet, hourOfDay, minute, 0); // sets global calendar for alarm
 
-                    timeSet.setText(hour+":"+min+phase);
+                    timeSet.setText(hour + ":" + min + phase);
+                    textInfo[3] = hour + ":"+min+phase;
                     timeSet.setVisibility(View.VISIBLE);
                     timeSet.setFocusable(false);
                 }
@@ -185,6 +197,8 @@ public class MainActivity extends Activity {
                 smsManager.sendTextMessage((String)textInfo[1], null, messageText.getText().toString(), null, null);
                 Toast.makeText(getBaseContext(), "Sending text now...", Toast.LENGTH_SHORT).show();
                 isNow = false; // resets the variable
+                textInfo[0] = rand.nextInt();
+                textInfo[6] = true;
             }
             else{ // Text message is being scheduled using Alarm Manager
                 Intent textIntent = new Intent(this, WakeLocker.class); // Intent to go to the wakeful broadcast receiver
@@ -193,12 +207,25 @@ public class MainActivity extends Activity {
                     textIntent.putExtra("Text Info: "+counter, (String)s);
                     counter++;
                 }
-                PendingIntent pendingText = PendingIntent.getBroadcast(this, rand.nextInt(), textIntent, 0); // creates a new intent with unique request codes
+                textInfo[0] = rand.nextInt();
+                PendingIntent pendingText = PendingIntent.getBroadcast(this, (int)textInfo[0], textIntent, 0); // creates a new intent with unique request codes
 
                 AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
                 alarmManager.set(alarmManager.RTC_WAKEUP, infoCal.getTimeInMillis(), pendingText); // sets the alarm at the specified date and time
+                Toast.makeText(getBaseContext(), "Text has been scheduled", Toast.LENGTH_SHORT).show(); // Indicate Message has been schedule
             }
-            Toast.makeText(getBaseContext(), "Text has been scheduled", Toast.LENGTH_SHORT).show(); // Indicate Message has been schedule
+
+            ///// SAVING TO DATABASE
+            ContentValues values = new ContentValues();
+            values.put(TextInfoStore.KEY_ID, (int)textInfo[0]);
+            values.put(TextInfoStore.KEY_PHONE, (String)textInfo[1]); // saves Phone Number
+            values.put(TextInfoStore.KEY_DATE, (String)textInfo[2]); // saves Date
+            values.put(TextInfoStore.KEY_TIME, (String)textInfo[3]); // saves Time
+            values.put(TextInfoStore.KEY_CONTENT, (String)textInfo[4]); // saves Text Message Itself
+            values.put(TextInfoStore.KEY_CONTACT, (String)textInfo[5]); // saves Contact
+            values.put(TextInfoStore.KEY_SENTSTATUS, (String)textInfo[6]); // saves whether the text has been sent or not
+
+            long newRowId = db.insert(TextInfoStore.TABLE_NAME, null, values);
         }
 
     }
@@ -245,5 +272,9 @@ public class MainActivity extends Activity {
                 c.close();
             }
         }
+    }
+
+    public static SQLiteDatabase getDB(){
+        return db;
     }
 }

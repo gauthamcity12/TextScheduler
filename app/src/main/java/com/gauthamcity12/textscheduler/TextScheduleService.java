@@ -38,18 +38,21 @@ public class TextScheduleService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        String[] textInfo = new String[6];
-        for(int i = 0; i < 6; i++){
+        String[] textInfo = new String[7];
+        for(int i = 0; i < 7; i++){
             textInfo[i] = intent.getStringExtra("Text Info: "+i);
         }
         SmsManager smsManager = SmsManager.getDefault();
         smsManager.sendTextMessage(textInfo[1], null, textInfo[4], null, null); // sends the actual text
+        textInfo[6] = "true";
 
         Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.ic_check);
         NotificationManager manager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         Notification finished = new Notification.Builder(this).setContentTitle("Scheduled Text sent to " + textInfo[5]).setSmallIcon(R.drawable.ic_launcher).build();
         Random rand = new Random(10000);
         manager.notify(rand.nextInt(), finished);
+
+
 
         WakeLocker.completeWakefulIntent(intent); // Closes the WakeLock after the service is performed
     }

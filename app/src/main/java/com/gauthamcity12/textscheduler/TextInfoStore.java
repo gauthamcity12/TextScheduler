@@ -10,16 +10,19 @@ import android.widget.Toast;
  * Created by gauthamcity12 on 6/16/15.
  */
 public class TextInfoStore extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 2;
-    private static final String DATABASE_NAME = "TextSchedulerDB.db";
-    private static final String TABLE_NAME = "TextInfo";
-    private static final String KEY_ID = "MessageID";
-    private static final String KEY_PHONE = "PhoneNumber";
-    private static final String KEY_DATE = "Date";
-    private static final String KEY_TIME = "Time";
-    private static final String KEY_CONTENT = "Content";
-    private static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " (" + KEY_ID + " INTEGER PRIMARY KEY NOT NULL, " + KEY_PHONE + " INTEGER NOT NULL, " +
-            KEY_DATE + " DATE NOT NULL, " + KEY_TIME + " TIME NOT NULL, " + KEY_CONTENT + " VARCHAR(120) NOT NULL);";
+    public static final int DATABASE_VERSION = 2;
+    public static final String DATABASE_NAME = "TextSchedulerDB.db";
+    public static final String TABLE_NAME = "TextInfo";
+    public static final String KEY_ID = "MessageID";
+    public static final String KEY_PHONE = "PhoneNumber";
+    public static final String KEY_DATE = "Date";
+    public static final String KEY_TIME = "Time";
+    public static final String KEY_CONTENT = "Content";
+    public static final String KEY_CONTACT = "Contact";
+    public static final String KEY_SENTSTATUS = "SentStatus";
+    public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " (" + KEY_ID + " INTEGER PRIMARY KEY NOT NULL, " + KEY_PHONE + " VARCHAR(11) NOT NULL, " +
+            KEY_DATE + " VARCHAR(20) NOT NULL, " + KEY_TIME + " VARCHAR(10) NOT NULL, " + KEY_CONTENT + " VARCHAR(120) NOT NULL, " + KEY_CONTACT + " VARCHAR(30) NOT NULL, "+
+            KEY_SENTSTATUS + " VARCHAR(5) NOT NULL);";
 
     public TextInfoStore(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
