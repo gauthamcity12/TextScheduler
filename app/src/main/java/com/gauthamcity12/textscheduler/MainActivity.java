@@ -28,12 +28,14 @@ import android.widget.Toast;
 import org.w3c.dom.Text;
 
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Random;
 
 
 public class MainActivity extends Activity {
     private static TextInfoStore textDB;
     private static SQLiteDatabase db;
+    private static HashMap<Integer, Long> rowMap = new HashMap<>();
     private Object[] textInfo = new Object[7];
     /* Information Stored at Each Index
     * 0) Session ID
@@ -51,10 +53,11 @@ public class MainActivity extends Activity {
     private int monthSet;
     private int daySet;
     private Calendar infoCal = Calendar.getInstance();
-    private Random rand = new Random(10000);
+    private Random rand = new Random();
     private DatePickerDialog dpDialog;
     private TimePickerDialog tpDialog;
     private int PICK_CONTACT = 1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -193,21 +196,26 @@ public class MainActivity extends Activity {
             SmsManager smsManager = SmsManager.getDefault();
 
             // Schedule the Text Message
+            textInfo[0] = rand.nextInt();
             if(isNow){ // no need to schedule text, text is being sent now
                 smsManager.sendTextMessage((String)textInfo[1], null, messageText.getText().toString(), null, null);
                 Toast.makeText(getBaseContext(), "Sending text now...", Toast.LENGTH_SHORT).show();
                 isNow = false; // resets the variable
-                textInfo[0] = rand.nextInt();
                 textInfo[6] = true;
             }
             else{ // Text message is being scheduled using Alarm Manager
                 Intent textIntent = new Intent(this, WakeLocker.class); // Intent to go to the wakeful broadcast receiver
                 int counter = 0;
                 for(Object s : textInfo){ // append all textInformation to Intent
-                    textIntent.putExtra("Text Info: "+counter, (String)s);
+                    if(counter == 0){
+                        textIntent.putExtra("Text Info: "+counter, String.valueOf((int)s));
+                    }
+                    else{
+                        textIntent.putExtra("Text Info: "+counter, (String)s);
+                    }
+
                     counter++;
                 }
-                textInfo[0] = rand.nextInt();
                 PendingIntent pendingText = PendingIntent.getBroadcast(this, (int)textInfo[0], textIntent, 0); // creates a new intent with unique request codes
 
                 AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
@@ -225,7 +233,8 @@ public class MainActivity extends Activity {
             values.put(TextInfoStore.KEY_CONTACT, (String)textInfo[5]); // saves Contact
             values.put(TextInfoStore.KEY_SENTSTATUS, (String)textInfo[6]); // saves whether the text has been sent or not
 
-            long newRowId = db.insert(TextInfoStore.TABLE_NAME, null, values);
+            long newRowId = db.insert(TextInfoStore.TABLE_NAME, null, values); // inserts into the database
+            rowMap.put((int)textInfo[0], newRowId); // maps the Text Schedule ID with the Row ID for updating the database later
         }
 
     }
@@ -276,5 +285,13 @@ public class MainActivity extends Activity {
 
     public static SQLiteDatabase getDB(){
         return db;
+    }
+
+    public static Long getRowID(int key){
+        return rowMap.get(key);
+    }
+
+    public static void deleteMapping(int key){
+        rowMap.remove(key);
     }
 }
