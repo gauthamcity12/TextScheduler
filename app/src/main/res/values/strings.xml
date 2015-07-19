@@ -6,4 +6,6 @@
     <string name="welcome_message2">A new way to plan your most important texts</string>
     <string name="instructions">Please indicate what date and time you want to send the message</string>
     <string name="button_text">Ok</string>
+    <string name="title_activity_text_history">TextHistory</string>
+    <string name="action_settings">Settings</string>
 </resources>

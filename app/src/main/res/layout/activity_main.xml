@@ -7,7 +7,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:orientation="vertical"
-    android:background="#FF7043"
+    android:background="#455A64"
     tools:context=".MainActivity"
     android:weightSum="1"
     android:id="@+id/MainLayout">
@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:text="Set Date"
             android:textColor="#FFFFFF"
-            android:background="#009688"
+            android:background="#2196F3"
             android:layout_alignParentLeft="true"
             android:elevation="10dp"
             android:onClick="saveDate"/>
@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:text="Set Time"
             android:textColor="#FFFFFF"
-            android:background="#009688"
+            android:background="#2196F3"
             android:layout_alignParentRight="true"
             android:onClick="saveTime"/>
     </RelativeLayout>
@@ -91,7 +91,7 @@
             android:layout_height="wrap_content"
             android:text="Set Contact"
             android:textColor="#FFFFFF"
-            android:background="#009688"
+            android:background="#2196F3"
             android:onClick="saveContact"
             android:padding="5dp"
             android:layout_alignParentStart="true"/>
@@ -122,7 +122,7 @@
         android:layout_height="wrap_content"
         android:text="Set Message Text"
         android:textColor="#FFFFFF"
-        android:background="#009688"
+        android:background="#2196F3"
         android:onClick="saveMessage"
         android:padding="5dp"
         android:layout_marginTop="5dp"
