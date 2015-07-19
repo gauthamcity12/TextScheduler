@@ -7,7 +7,9 @@ import android.app.DatePickerDialog;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
@@ -27,6 +29,8 @@ import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Random;
@@ -35,7 +39,7 @@ import java.util.Random;
 public class MainActivity extends Activity {
     private static TextInfoStore textDB;
     private static SQLiteDatabase db;
-    private static HashMap<Integer, Long> rowMap = new HashMap<>();
+    //private static HashMap<Integer, Long> rowMap = new HashMap<>();
     private Object[] textInfo = new Object[7];
     /* Information Stored at Each Index
     * 0) Session ID
@@ -57,6 +61,8 @@ public class MainActivity extends Activity {
     private DatePickerDialog dpDialog;
     private TimePickerDialog tpDialog;
     private int PICK_CONTACT = 1;
+    protected static String PREFS_NAME = "HASHMAPVALS";
+    private SharedPreferences settings;
 
 
     @Override
@@ -77,6 +83,9 @@ public class MainActivity extends Activity {
         timeSet.setOnTouchListener(new ButtonTouchListener());
         contactSet.setOnTouchListener(new ButtonTouchListener());
         messageSet.setOnTouchListener(new ButtonTouchListener());
+
+        //Create Preferences File
+        settings = this.getSharedPreferences(PREFS_NAME, 0);
     }
 
     @Override
@@ -234,9 +243,20 @@ public class MainActivity extends Activity {
             values.put(TextInfoStore.KEY_SENTSTATUS, (String)textInfo[6]); // saves whether the text has been sent or not
 
             long newRowId = db.insert(TextInfoStore.TABLE_NAME, null, values); // inserts into the database
-            rowMap.put((int)textInfo[0], newRowId); // maps the Text Schedule ID with the Row ID for updating the database later
+            //rowMap.put((int)textInfo[0], newRowId); // maps the Text Schedule ID with the Row ID for updating the database later
+
+            saveMap((int)textInfo[0], newRowId);
         }
 
+    }
+
+    public void saveMap(int val, long id){
+        SharedPreferences.Editor editor = settings.edit();
+        String identifier = textInfo[0]+"";
+        editor.putInt(identifier+"int", val);
+        editor.putLong(identifier+"long", id);
+        boolean result = editor.commit();
+        Toast.makeText(getBaseContext(), result+"", Toast.LENGTH_SHORT).show();
     }
 
     public void saveContact(View view){
@@ -285,13 +305,5 @@ public class MainActivity extends Activity {
 
     public static SQLiteDatabase getDB(){
         return db;
-    }
-
-    public static Long getRowID(int key){
-        return rowMap.get(key);
-    }
-
-    public static void deleteMapping(int key){
-        rowMap.remove(key);
     }
 }

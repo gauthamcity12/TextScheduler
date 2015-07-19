@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -35,6 +36,9 @@ public class TextScheduleService extends IntentService {
     }
     */
 
+    private SharedPreferences settings;
+    private SharedPreferences.Editor editor;
+
     public TextScheduleService(){
         super("TextScheduleServiceStarted");
     }
@@ -61,17 +65,30 @@ public class TextScheduleService extends IntentService {
         ContentValues newValue = new ContentValues();
         newValue.put(TextInfoStore.KEY_SENTSTATUS, (String) textInfo[6]);
 
-        String selection = TextInfoStore.KEY_ID + " Like ?";
+        settings = this.getSharedPreferences("HASHMAPVALS", 0); // gets the shared preferences file
+        editor = settings.edit();
+
         int key = Integer.parseInt(textInfo[0]);
-        long rowId = MainActivity.getRowID(key);
-        //String[] selectionArgs = {String.valueof()};
+        long rowId = getRowID(key);
 
         db.update(TextInfoStore.TABLE_NAME, newValue, TextInfoStore.KEY_ID+"="+rowId, null); // updated database since text was sent
 
         //remove mapping from hash now that text is sent
-        MainActivity.deleteMapping(key);
+        deleteMapping(key);
 
 
         WakeLocker.completeWakefulIntent(intent); // Closes the WakeLock after the service is performed
+    }
+
+    public long getRowID(int key){
+        long val = settings.getLong(key+"long", 0);
+        return val;
+    }
+
+    // text has been sent, no need to store value in preferences file
+    public void deleteMapping(int key){
+        editor.remove(key+"int");
+        editor.remove(key+"long");
+        editor.commit();
     }
 }
