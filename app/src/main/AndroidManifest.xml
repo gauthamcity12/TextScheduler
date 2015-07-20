@@ -28,7 +28,7 @@
             android:enabled="true" />
 
         <activity
-            android:name=".TextHistory"
+            android:name=".TextHistoryActivity"
             android:label="@string/title_activity_text_history" >
         </activity>
     </application>

@@ -104,6 +104,8 @@ public class MainActivity extends Activity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.viewScheduled) {
+            Intent intent = new Intent(this, TextHistoryActivity.class);
+            this.startActivity(intent);
             return true;
         }
 

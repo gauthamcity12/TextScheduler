@@ -11,6 +11,7 @@
     <RelativeLayout
         android:id="@+id/cardBackground"
         android:layout_width="match_parent"
+        android:background="#455A64"
         android:layout_height="match_parent">
 
         <TextView
@@ -20,7 +21,8 @@
             android:text="Contact Name"
             android:gravity="center_vertical"
             android:textColor="@android:color/white"
-            android:textSize="30dp"/>
+            android:layout_marginLeft="5dp"
+            android:textSize="25dp"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -49,9 +51,9 @@
             android:text="Date"
             android:gravity="center_vertical"
             android:textColor="@android:color/white"
-            android:textSize="25dp"
+            android:textSize="20dp"
             android:layout_below="@+id/contact"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="7dp"
             android:layout_marginLeft="5dp"/>
 
         <TextView
@@ -61,7 +63,7 @@
             android:text="Time"
             android:gravity="center_vertical"
             android:textColor="@android:color/white"
-            android:textSize="25dp"
+            android:textSize="15dp"
             android:layout_below="@+id/date"
             android:layout_marginTop="2dp"
             android:layout_marginLeft="5dp"/>
@@ -73,7 +75,7 @@
             android:text="Content"
             android:gravity="center_vertical"
             android:textColor="@android:color/white"
-            android:textSize="25dp"
+            android:textSize="10dp"
             android:layout_below="@+id/time"
             android:layout_marginTop="5dp"
             android:layout_marginLeft="5dp"/>
