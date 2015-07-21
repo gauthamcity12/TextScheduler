@@ -142,6 +142,9 @@ public class MainActivity extends Activity {
                         phase = " PM";
                         hour -= 12;
                     }
+                    else{
+                        phase = " AM";
+                    }
                     if(hour == 0){
                         hour = 12;
                     }
@@ -185,7 +188,7 @@ public class MainActivity extends Activity {
                     isToday = true;
                     Toast.makeText(getBaseContext(), "Not a valid date, please set again", Toast.LENGTH_SHORT).show();
                 }
-                String dateInfo = monthSet+" "+daySet+"'"+yearSet;
+                String dateInfo = monthSet+"-"+daySet+"-"+yearSet;
 
                 textInfo[2] = dateInfo;
                 dateSet.setText(monthSet+"-"+daySet+"-"+yearSet);
