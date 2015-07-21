@@ -12,6 +12,7 @@ import android.view.MenuItem;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
 
 
 public class TextHistoryActivity extends Activity {
@@ -74,6 +75,7 @@ public class TextHistoryActivity extends Activity {
         if(list.isEmpty()){ // if no texts in db
             list.add(new TextData("No Scheduled Texts Yet!", "", "", ""));
         }
+        Collections.sort(list);
         return list;
 
     }

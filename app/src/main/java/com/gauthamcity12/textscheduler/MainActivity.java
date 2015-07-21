@@ -180,18 +180,18 @@ public class MainActivity extends Activity {
                 else{
                     isToday = false;
                 }
-
-                if(dayOfMonth < currentCal.get(Calendar.DAY_OF_MONTH) || monthOfYear < currentCal.get(Calendar.MONTH) || year < currentCal.get(Calendar.YEAR)){
+                infoCal.set(yearSet, monthSet, daySet, currentCal.get(Calendar.HOUR_OF_DAY), currentCal.get(Calendar.MINUTE), 0);
+                if(!isToday && infoCal.getTimeInMillis() < currentCal.getTimeInMillis()){ // check if its before today based on millisecondtime
                     yearSet = currentCal.get(Calendar.YEAR);
                     monthSet = currentCal.get(Calendar.MONTH);
                     daySet = currentCal.get(Calendar.DAY_OF_MONTH);
                     isToday = true;
                     Toast.makeText(getBaseContext(), "Not a valid date, please set again", Toast.LENGTH_SHORT).show();
                 }
-                String dateInfo = monthSet+"-"+daySet+"-"+yearSet;
+                String dateInfo = (monthSet+1)+"-"+daySet+"-"+yearSet;
 
                 textInfo[2] = dateInfo;
-                dateSet.setText(monthSet+"-"+daySet+"-"+yearSet);
+                dateSet.setText((monthSet+1)+"-"+daySet+"-"+yearSet);
                 dateSet.setVisibility(View.VISIBLE);
                 dateSet.setFocusable(false);
             }
