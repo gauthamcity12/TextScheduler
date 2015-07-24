@@ -51,7 +51,6 @@ public class TextData implements Comparable{
 
         if(this.getStatus() == true){
             if(other.getStatus() == true){
-
                 if(Character.isDigit(date1.charAt(1))){
                     val1 = Integer.parseInt(date1.substring(0,2));
                 }
@@ -65,6 +64,22 @@ public class TextData implements Comparable{
                     return 1;
                 }
                 else{
+                    if(date1.contains("-")){
+                        int firstIndex = date1.indexOf("-");
+                        int secondIndex = date1.lastIndexOf("-");
+                        val1 = Integer.parseInt(date1.substring(firstIndex + 1, secondIndex));
+
+                        firstIndex = date2.indexOf("-");
+                        secondIndex = date2.lastIndexOf("-");
+                        val2 = Integer.parseInt(date1.substring(firstIndex+1, secondIndex));
+
+                        if(val1 < val2){
+                            return -1;
+                        }
+                        else{
+                            return 1;
+                        }
+                    }
                     return 0;
                 }
             }
@@ -72,7 +87,36 @@ public class TextData implements Comparable{
         }
         else if(this.getStatus() == false){
             if(other.getStatus() == false){
-                return 0;
+                if(Character.isDigit(date1.charAt(1))){
+                    val1 = Integer.parseInt(date1.substring(0,2));
+                }
+                if(Character.isDigit(date2.charAt(1))){
+                    val2 = Integer.parseInt(date2.substring(0,2));
+                }
+                if(val1 < val2){
+                    return -1;
+                }
+                else if(val1 > val2){
+                    return 1;
+                }
+                else {
+                    if (date1.contains("-")) {
+                        int firstIndex = date1.indexOf("-");
+                        int secondIndex = date1.lastIndexOf("-");
+                        val1 = Integer.parseInt(date1.substring(firstIndex + 1, secondIndex));
+
+                        firstIndex = date2.indexOf("-");
+                        secondIndex = date2.lastIndexOf("-");
+                        val2 = Integer.parseInt(date2.substring(firstIndex + 1, secondIndex));
+
+                        if (val1 < val2) {
+                            return -1;
+                        } else {
+                            return 1;
+                        }
+                    }
+                    return 0;
+                }
             }
             return -1; // if text hasn't been sent yet, then send it to the front
         }

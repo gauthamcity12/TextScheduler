@@ -18,8 +18,6 @@ public class TextHistoryRecyclerAdapter extends RecyclerView.Adapter<TextDataVie
         this.texts = new ArrayList<TextData>();
         this.texts.addAll(texts); // populates all of the texts that were passed in
     }
-
-
     @Override
     public TextDataViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View itemView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_view, viewGroup, false);
@@ -37,13 +35,17 @@ public class TextHistoryRecyclerAdapter extends RecyclerView.Adapter<TextDataVie
         if(textData.getStatus()){ // the text has already been sent
             textDataViewHolder.status.setText("Sent!");
             textDataViewHolder.delete.setVisibility(View.INVISIBLE);
+            textDataViewHolder.status.setVisibility(View.VISIBLE);
+        }
+        else if(getItemCount() == 1){ // if no texts are in the list
+            textDataViewHolder.status.setVisibility(View.INVISIBLE);
+            textDataViewHolder.delete.setVisibility(View.INVISIBLE);
         }
         else{ // if the text has not been sent yet.
             textDataViewHolder.status.setText("Scheduled");
             textDataViewHolder.delete.setVisibility(View.VISIBLE);
+            textDataViewHolder.status.setVisibility(View.VISIBLE);
         }
-
-
     }
 
     @Override

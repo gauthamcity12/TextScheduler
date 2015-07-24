@@ -32,18 +32,6 @@ public class TextHistoryActivity extends Activity {
         recyclerView.setAdapter(new TextHistoryRecyclerAdapter(getTexts()));
     }
 
-//    //TODO: Removed this method when done testing
-//    private ArrayList<TextData> makeTexts(){
-//        ArrayList<TextData> list = new ArrayList<>();
-//        list.add(new TextData("Bobby Shmurda", "July 4th", "4 AM", "ALL I DO IS CASH OUT"));
-//        list.add(new TextData("Wiz Khalifa", "July 4th", "4 AM", "Work Hard Play Hard"));
-//        list.add(new TextData("A$AP Rocky", "July 4th", "4 AM", "Long Live A$AP"));
-//        list.add(new TextData("A$AP Ferg", "July 4th", "4 AM", "Dump Dump"));
-//
-//        return list;
-//    }
-
-
     @Override
     protected void onResume() { // updates the scrolling list without needing to restart the activity
         super.onResume();
