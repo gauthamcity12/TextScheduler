@@ -3,12 +3,16 @@ package com.gauthamcity12.textscheduler;
 import android.app.Activity;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -19,6 +23,7 @@ public class TextHistoryActivity extends Activity {
 
     private RecyclerView recyclerView;
     private LinearLayoutManager llmanager;
+    private TextHistoryRecyclerAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,7 +34,9 @@ public class TextHistoryActivity extends Activity {
         llmanager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llmanager);
 
-        recyclerView.setAdapter(new TextHistoryRecyclerAdapter(getTexts()));
+        adapter = new TextHistoryRecyclerAdapter(getTexts());
+        recyclerView.setAdapter(adapter);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
     @Override
@@ -47,21 +54,21 @@ public class TextHistoryActivity extends Activity {
 
         TextData tdat;
         if(cursor.moveToFirst()){ // checks the first row
-            tdat = new TextData(cursor.getString(5), cursor.getString(2), cursor.getString(3), cursor.getString(4));
+            tdat = new TextData(cursor.getString(5), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getInt(0));
             if(cursor.getString(6).equals("true")){
                 tdat.sent();
             }
             list.add(tdat);
         }
         while (cursor.moveToNext()){ // checks the rest of the rows
-            tdat = new TextData(cursor.getString(5), cursor.getString(2), cursor.getString(3), cursor.getString(4));
+            tdat = new TextData(cursor.getString(5), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getInt(0));
             if(cursor.getString(6).equals("true")){
                 tdat.sent();
             }
             list.add(tdat);
         }
         if(list.isEmpty()){ // if no texts in db
-            list.add(new TextData("No Scheduled Texts Yet!", "", "", ""));
+            list.add(new TextData("No Scheduled Texts Yet!", "", "", "", 0));
         }
         Collections.sort(list);
         return list;

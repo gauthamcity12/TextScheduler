@@ -9,12 +9,14 @@ public class TextData implements Comparable{
     private String time;
     private String content;
     private boolean status = false;
+    private int sessionID;
 
-    public TextData(String contact, String date, String time, String content){
+    public TextData(String contact, String date, String time, String content, int sessionID){
         this.contactName = contact;
         this.date = date;
         this.time = time;
         this.content = content;
+        this.sessionID = sessionID;
     }
 
     public String getContactName(){
@@ -35,6 +37,10 @@ public class TextData implements Comparable{
 
     public boolean getStatus(){
         return status;
+    }
+
+    public int getSessionID(){
+        return sessionID;
     }
 
     public void sent(){

@@ -1,9 +1,13 @@
 package com.gauthamcity12.textscheduler;
 
+import android.app.PendingIntent;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +17,8 @@ import java.util.List;
  */
 public class TextHistoryRecyclerAdapter extends RecyclerView.Adapter<TextDataViewHolder> {
     private List<TextData> texts;
+    private boolean deleteClicked = false;
+    private Handler handler;
 
     public TextHistoryRecyclerAdapter(List<TextData> texts){
         this.texts = new ArrayList<TextData>();
@@ -27,10 +33,31 @@ public class TextHistoryRecyclerAdapter extends RecyclerView.Adapter<TextDataVie
     @Override
     public void onBindViewHolder(TextDataViewHolder textDataViewHolder, int i) {
         TextData textData = texts.get(i);
+        final int i2 = i;
         textDataViewHolder.contactName.setText(textData.getContactName());
         textDataViewHolder.date.setText(textData.getDate());
         textDataViewHolder.time.setText(textData.getTime());
         textDataViewHolder.content.setText(textData.getContent());
+        textDataViewHolder.delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                texts.remove(i2);
+                deleteClicked = true;
+                Handler mHandler = new Handler();
+
+                final int index = i2;
+                final int size = getItemCount();
+
+                mHandler.post(new Runnable(){
+                    @Override
+                    public void run(){
+                        notifyItemRemoved(index);
+                        notifyItemRangeChanged(index, size);
+                    }
+                });
+                deleteClicked = false;
+            }
+        });
 
         if(textData.getStatus()){ // the text has already been sent
             textDataViewHolder.status.setText("Sent!");
@@ -45,6 +72,11 @@ public class TextHistoryRecyclerAdapter extends RecyclerView.Adapter<TextDataVie
             textDataViewHolder.status.setText("Scheduled");
             textDataViewHolder.delete.setVisibility(View.VISIBLE);
             textDataViewHolder.status.setVisibility(View.VISIBLE);
+        }
+
+        if(deleteClicked){ // TODO: remove from db, test
+
+
         }
     }
 

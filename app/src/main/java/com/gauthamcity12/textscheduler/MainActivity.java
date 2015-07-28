@@ -239,7 +239,7 @@ public class MainActivity extends Activity {
 
             ///// SAVING TO DATABASE
             ContentValues values = new ContentValues();
-            values.put(TextInfoStore.KEY_ID, (int)textInfo[0]);
+            values.put(TextInfoStore.KEY_ID, (int)textInfo[0]); // saves session ID as primary key
             values.put(TextInfoStore.KEY_PHONE, (String)textInfo[1]); // saves Phone Number
             values.put(TextInfoStore.KEY_DATE, (String)textInfo[2]); // saves Date
             values.put(TextInfoStore.KEY_TIME, (String)textInfo[3]); // saves Time
