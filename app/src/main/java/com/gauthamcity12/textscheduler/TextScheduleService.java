@@ -18,6 +18,8 @@ import android.telephony.SmsManager;
 import android.view.textservice.TextInfo;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 import java.util.Random;
 
 /**
@@ -81,7 +83,7 @@ public class TextScheduleService extends IntentService {
     }
 
     public long getRowID(int key){
-        long val = settings.getLong(key+"long", 0);
+        long val = settings.getLong(key + "long", 0);
         return val;
     }
 

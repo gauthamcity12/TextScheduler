@@ -1,6 +1,10 @@
 package com.gauthamcity12.textscheduler;
 
+import android.app.Activity;
 import android.app.PendingIntent;
+import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.RecyclerView;
@@ -17,12 +21,12 @@ import java.util.List;
  */
 public class TextHistoryRecyclerAdapter extends RecyclerView.Adapter<TextDataViewHolder> {
     private List<TextData> texts;
-    private boolean deleteClicked = false;
-    private Handler handler;
+    private Activity context;
 
-    public TextHistoryRecyclerAdapter(List<TextData> texts){
+    public TextHistoryRecyclerAdapter(List<TextData> texts, Activity activity){
         this.texts = new ArrayList<TextData>();
         this.texts.addAll(texts); // populates all of the texts that were passed in
+        context = activity;
     }
     @Override
     public TextDataViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
@@ -41,12 +45,12 @@ public class TextHistoryRecyclerAdapter extends RecyclerView.Adapter<TextDataVie
         textDataViewHolder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                texts.remove(i2);
-                deleteClicked = true;
+                TextData tdat = texts.remove(i2);
                 Handler mHandler = new Handler();
 
                 final int index = i2;
                 final int size = getItemCount();
+
 
                 mHandler.post(new Runnable(){
                     @Override
@@ -55,7 +59,16 @@ public class TextHistoryRecyclerAdapter extends RecyclerView.Adapter<TextDataVie
                         notifyItemRangeChanged(index, size);
                     }
                 });
-                deleteClicked = false;
+
+                SQLiteDatabase db = MainActivity.getDB();
+                SharedPreferences settings = context.getSharedPreferences("HASHMAPVALS", 0);
+                long rowId = settings.getLong(tdat.getSessionID()+"long", 0);
+                try{
+                    db.delete(TextInfoStore.TABLE_NAME, TextInfoStore.KEY_ID+"="+rowId, null);
+                }
+                catch(Exception e){
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -73,15 +86,11 @@ public class TextHistoryRecyclerAdapter extends RecyclerView.Adapter<TextDataVie
             textDataViewHolder.delete.setVisibility(View.VISIBLE);
             textDataViewHolder.status.setVisibility(View.VISIBLE);
         }
-
-        if(deleteClicked){ // TODO: remove from db, test
-
-
-        }
     }
 
     @Override
     public int getItemCount() {
         return texts.size();
     }
+
 }

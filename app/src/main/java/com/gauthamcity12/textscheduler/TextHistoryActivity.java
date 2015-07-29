@@ -34,7 +34,7 @@ public class TextHistoryActivity extends Activity {
         llmanager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llmanager);
 
-        adapter = new TextHistoryRecyclerAdapter(getTexts());
+        adapter = new TextHistoryRecyclerAdapter(getTexts(), this);
         recyclerView.setAdapter(adapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
@@ -42,7 +42,7 @@ public class TextHistoryActivity extends Activity {
     @Override
     protected void onResume() { // updates the scrolling list without needing to restart the activity
         super.onResume();
-        recyclerView.setAdapter(new TextHistoryRecyclerAdapter(getTexts()));
+        recyclerView.setAdapter(new TextHistoryRecyclerAdapter(getTexts(), this));
     }
 
     private ArrayList<TextData> getTexts(){
