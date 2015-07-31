@@ -52,7 +52,7 @@ public class TextData implements Comparable{
         TextData other = ((TextData)another);
         String date1 = this.getDate();
         String date2 = other.getDate();
-        int val1 = Integer.parseInt(date1.substring(0, 1));
+        int val1 = Integer.parseInt(date1.substring(0,1));
         int val2 = Integer.parseInt(date2.substring(0,1));
 
         if(this.getStatus() == true){
@@ -77,13 +77,25 @@ public class TextData implements Comparable{
 
                         firstIndex = date2.indexOf("-");
                         secondIndex = date2.lastIndexOf("-");
-                        val2 = Integer.parseInt(date1.substring(firstIndex+1, secondIndex));
+                        val2 = Integer.parseInt(date2.substring(firstIndex+1, secondIndex));
 
                         if(val1 < val2){
                             return -1;
                         }
-                        else{
+                        else if(val2 < val1){
                             return 1;
+                        }
+                        else{
+                            firstIndex = this.getTime().indexOf(":");
+                            secondIndex = other.getTime().indexOf(":");
+                            val1 = Integer.parseInt(this.getTime().substring(0, firstIndex));
+                            val2 = Integer.parseInt(other.getTime().substring(0,secondIndex));
+                            if(val1 < val2){
+                                return -1;
+                            }
+                            else{
+                                return 1;
+                            }
                         }
                     }
                     return 0;
@@ -115,10 +127,23 @@ public class TextData implements Comparable{
                         secondIndex = date2.lastIndexOf("-");
                         val2 = Integer.parseInt(date2.substring(firstIndex + 1, secondIndex));
 
-                        if (val1 < val2) {
+                        if(val1 < val2){
                             return -1;
-                        } else {
+                        }
+                        else if(val2 < val1){
                             return 1;
+                        }
+                        else{
+                            firstIndex = this.getTime().indexOf(":");
+                            secondIndex = other.getTime().indexOf(":");
+                            val1 = Integer.parseInt(this.getTime().substring(0, firstIndex));
+                            val2 = Integer.parseInt(other.getTime().substring(0,secondIndex));
+                            if(val1 < val2){
+                                return -1;
+                            }
+                            else{
+                                return 1;
+                            }
                         }
                     }
                     return 0;
