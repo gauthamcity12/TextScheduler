@@ -93,9 +93,8 @@ public class TextHistoryRecyclerAdapter extends RecyclerView.Adapter<TextDataVie
             textDataViewHolder.delete.setVisibility(View.INVISIBLE);
         }
         else{ // if the text has not been sent yet.
-            textDataViewHolder.status.setText("Scheduled");
             textDataViewHolder.delete.setVisibility(View.VISIBLE);
-            textDataViewHolder.status.setVisibility(View.VISIBLE);
+            textDataViewHolder.status.setVisibility(View.GONE);
         }
     }
 
