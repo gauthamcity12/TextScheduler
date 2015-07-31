@@ -92,7 +92,7 @@ public class TextHistoryActivity extends Activity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_refresh) {
+        if (id == R.id.action_refresh) { // refreshes the adapter to show texts sent status
             recyclerView.setAdapter(new TextHistoryRecyclerAdapter(getTexts(), this));
             return true;
         }

@@ -3,6 +3,7 @@ package com.gauthamcity12.textscheduler;
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -58,7 +59,14 @@ public class TextScheduleService extends IntentService {
 
         Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.ic_check);
         NotificationManager manager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-        Notification finished = new Notification.Builder(this).setContentTitle("Scheduled Text sent to " + textInfo[5]).setSmallIcon(R.drawable.ic_launcher).build();
+        Notification finished = new Notification.Builder(this)
+                .setAutoCancel(true)
+                .setContentTitle("Scheduled Text sent to " + textInfo[5]).setSmallIcon(R.drawable.ic_done_white_24dp).build();
+
+        Intent notificationIntent = new Intent(this, TextHistoryActivity.class);
+        PendingIntent pNot = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+        finished.contentIntent = pNot;
+
         Random rand = new Random();
         manager.notify(rand.nextInt(), finished);
 
