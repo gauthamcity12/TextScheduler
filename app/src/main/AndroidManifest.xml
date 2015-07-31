@@ -29,7 +29,8 @@
 
         <activity
             android:name=".TextHistoryActivity"
-            android:label="@string/title_activity_text_history" >
+            android:label="@string/title_activity_text_history"
+            android:parentActivityName = ".MainActivity">
         </activity>
     </application>
 

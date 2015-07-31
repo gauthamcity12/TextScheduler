@@ -1,7 +1,10 @@
 package com.gauthamcity12.textscheduler;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
@@ -69,6 +72,14 @@ public class TextHistoryRecyclerAdapter extends RecyclerView.Adapter<TextDataVie
                 catch(Exception e){
                     e.printStackTrace();
                 }
+
+                Intent toStop = new Intent(context, WakeLocker.class);
+                PendingIntent pStop = PendingIntent.getBroadcast(context, tdat.getSessionID(), toStop, 0);
+
+                AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+                alarmManager.cancel(pStop);
+                pStop.cancel();
+
             }
         });
 

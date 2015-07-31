@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -28,6 +29,7 @@ public class TextHistoryActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_text_history);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
 
         recyclerView = (RecyclerView)findViewById(R.id.recyclerList);
         llmanager = new LinearLayoutManager(this);
@@ -90,7 +92,13 @@ public class TextHistoryActivity extends Activity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_refresh) {
+            recyclerView.setAdapter(new TextHistoryRecyclerAdapter(getTexts(), this));
+            return true;
+        }
+
+        if(id == R.id.home){
+            NavUtils.navigateUpFromSameTask(this);
             return true;
         }
 

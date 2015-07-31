@@ -2,37 +2,32 @@ package com.gauthamcity12.textscheduler;
 
 import android.app.Activity;
 import android.app.AlarmManager;
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.app.ActionBar;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.telephony.SmsManager;
-import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.textservice.TextInfo;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
-import org.w3c.dom.Text;
-
-import java.io.FileOutputStream;
-import java.io.ObjectOutputStream;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Random;
 
 
@@ -215,7 +210,7 @@ public class MainActivity extends Activity {
                 smsManager.sendTextMessage((String)textInfo[1], null, messageText.getText().toString(), null, null);
                 Toast.makeText(getBaseContext(), "Sending text now...", Toast.LENGTH_SHORT).show();
                 isNow = false; // resets the variable
-                textInfo[6] = true;
+                textInfo[6] = "true";
             }
             else{ // Text message is being scheduled using Alarm Manager
                 Intent textIntent = new Intent(this, WakeLocker.class); // Intent to go to the wakeful broadcast receiver
