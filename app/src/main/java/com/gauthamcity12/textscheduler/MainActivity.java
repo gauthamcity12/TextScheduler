@@ -199,6 +199,9 @@ public class MainActivity extends Activity {
         if(textInfo[1] == null){ // Error check to verify a contact was chosen before message is sent
             Toast.makeText(getBaseContext(), "Please Choose a Contact to Text", Toast.LENGTH_SHORT).show();
         }
+        else if(textInfo[2] == null || textInfo[3] == null){
+            Toast.makeText(getBaseContext(), "Please Enter All the Necessary Information", Toast.LENGTH_SHORT).show();
+        }
         else{ // if all the proper information is inputted by the user
             EditText messageText = (EditText)findViewById(R.id.messageText);
             textInfo[4] = messageText.getText().toString(); // save the message text
