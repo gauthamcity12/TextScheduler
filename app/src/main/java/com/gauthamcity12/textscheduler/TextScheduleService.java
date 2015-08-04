@@ -48,8 +48,8 @@ public class TextScheduleService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        String[] textInfo = new String[7];
-        for(int i = 0; i < 7; i++){
+        String[] textInfo = new String[8];
+        for(int i = 0; i < 8; i++){
             textInfo[i] = intent.getStringExtra("Text Info: "+i);
         }
         SmsManager smsManager = SmsManager.getDefault();

@@ -34,8 +34,7 @@ import java.util.Random;
 public class MainActivity extends Activity {
     private static TextInfoStore textDB;
     private static SQLiteDatabase db;
-    //private static HashMap<Integer, Long> rowMap = new HashMap<>();
-    private Object[] textInfo = new Object[7];
+    private Object[] textInfo = new Object[8];
     /* Information Stored at Each Index
     * 0) Session ID
     * 1) Phone #
@@ -44,6 +43,7 @@ public class MainActivity extends Activity {
     * 4) Message Content
     * 5) Message Recipient
     * 6) Text Sent (True or False)
+    * 7) Timestamp of Scheduled Text (long)
      */
     private Button messageSet;
     private boolean isToday = false;
@@ -211,13 +211,18 @@ public class MainActivity extends Activity {
                 Toast.makeText(getBaseContext(), "Sending text now...", Toast.LENGTH_SHORT).show();
                 isNow = false; // resets the variable
                 textInfo[6] = "true";
+                textInfo[7] = 0;
             }
             else{ // Text message is being scheduled using Alarm Manager
                 Intent textIntent = new Intent(this, WakeLocker.class); // Intent to go to the wakeful broadcast receiver
                 int counter = 0;
+                textInfo[7] = infoCal.getTimeInMillis();
                 for(Object s : textInfo){ // append all textInformation to Intent
                     if(counter == 0){
                         textIntent.putExtra("Text Info: "+counter, String.valueOf((int)s));
+                    }
+                    else if(counter == 7){ //appends the timestamp value to the textInfo array
+                        textIntent.putExtra("Text Info: "+counter, String.valueOf((long)s));
                     }
                     else{
                         textIntent.putExtra("Text Info: "+counter, (String)s);
@@ -225,6 +230,7 @@ public class MainActivity extends Activity {
 
                     counter++;
                 }
+
                 PendingIntent pendingText = PendingIntent.getBroadcast(this, (int)textInfo[0], textIntent, 0); // creates a new intent with unique request codes
 
                 AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
@@ -241,6 +247,7 @@ public class MainActivity extends Activity {
             values.put(TextInfoStore.KEY_CONTENT, (String)textInfo[4]); // saves Text Message Itself
             values.put(TextInfoStore.KEY_CONTACT, (String)textInfo[5]); // saves Contact
             values.put(TextInfoStore.KEY_SENTSTATUS, (String)textInfo[6]); // saves whether the text has been sent or not
+            values.put(TextInfoStore.KEY_TIMESTAMP, (long)textInfo[7]); // saves the TimeStamp
 
             long newRowId = db.insert(TextInfoStore.TABLE_NAME, null, values); // inserts into the database
             //rowMap.put((int)textInfo[0], newRowId); // maps the Text Schedule ID with the Row ID for updating the database later

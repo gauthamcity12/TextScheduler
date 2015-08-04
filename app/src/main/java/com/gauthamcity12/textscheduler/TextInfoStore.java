@@ -20,9 +20,10 @@ public class TextInfoStore extends SQLiteOpenHelper {
     public static final String KEY_CONTENT = "Content";
     public static final String KEY_CONTACT = "Contact";
     public static final String KEY_SENTSTATUS = "SentStatus";
+    public static final String KEY_TIMESTAMP = "TimeStamp";
     public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " (" + KEY_ID + " INTEGER PRIMARY KEY NOT NULL, " + KEY_PHONE + " VARCHAR(11) NOT NULL, " +
             KEY_DATE + " VARCHAR(20) NOT NULL, " + KEY_TIME + " VARCHAR(10) NOT NULL, " + KEY_CONTENT + " VARCHAR(120) NOT NULL, " + KEY_CONTACT + " VARCHAR(30) NOT NULL, "+
-            KEY_SENTSTATUS + " VARCHAR(5) NOT NULL);";
+            KEY_SENTSTATUS + " VARCHAR(5) NOT NULL, " + KEY_TIMESTAMP + " INTEGER NOT NULL);";
 
     public TextInfoStore(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
