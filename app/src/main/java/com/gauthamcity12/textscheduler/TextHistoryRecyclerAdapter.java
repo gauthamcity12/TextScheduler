@@ -88,7 +88,7 @@ public class TextHistoryRecyclerAdapter extends RecyclerView.Adapter<TextDataVie
             textDataViewHolder.delete.setVisibility(View.INVISIBLE);
             textDataViewHolder.status.setVisibility(View.VISIBLE);
         }
-        else if(getItemCount() == 1){ // if no texts are in the list
+        else if(getItemCount() == 1 && textData.getSessionID() == 0){ // if no texts are in the list
             textDataViewHolder.status.setVisibility(View.INVISIBLE);
             textDataViewHolder.delete.setVisibility(View.INVISIBLE);
         }

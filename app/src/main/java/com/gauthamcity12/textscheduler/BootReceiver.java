@@ -9,7 +9,7 @@ import android.support.v4.content.WakefulBroadcastReceiver;
 
 public class BootReceiver extends WakefulBroadcastReceiver{
 
-    @Override // TODO: NEED TO ADD DB PARSING AND RESETTING ALARM
+    @Override // TODO: NEED TO ADD DB RETRIEVAL AND RESETTING ALARM
     public void onReceive(Context context, Intent intent) {
 
         Intent service = new Intent(context, TextScheduleService.class);
