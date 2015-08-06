@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.app.ActionBar;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -27,7 +28,9 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Random;
 
 
@@ -199,7 +202,7 @@ public class MainActivity extends Activity {
         if(textInfo[1] == null){ // Error check to verify a contact was chosen before message is sent
             Toast.makeText(getBaseContext(), "Please Choose a Contact to Text", Toast.LENGTH_SHORT).show();
         }
-        else if(textInfo[2] == null || textInfo[3] == null){
+        else if(textInfo[2] == null || textInfo[3] == null){ // Erorr check to verify that date and time are set as well
             Toast.makeText(getBaseContext(), "Please Enter All the Necessary Information", Toast.LENGTH_SHORT).show();
         }
         else{ // if all the proper information is inputted by the user
@@ -250,14 +253,13 @@ public class MainActivity extends Activity {
             values.put(TextInfoStore.KEY_CONTENT, (String)textInfo[4]); // saves Text Message Itself
             values.put(TextInfoStore.KEY_CONTACT, (String)textInfo[5]); // saves Contact
             values.put(TextInfoStore.KEY_SENTSTATUS, (String)textInfo[6]); // saves whether the text has been sent or not
-            values.put(TextInfoStore.KEY_TIMESTAMP, (long)textInfo[7]); // saves the TimeStamp
+            values.put(TextInfoStore.KEY_TIMESTAMP, String.valueOf(textInfo[7])); // saves the TimeStamp
 
             long newRowId = db.insert(TextInfoStore.TABLE_NAME, null, values); // inserts into the database
             //rowMap.put((int)textInfo[0], newRowId); // maps the Text Schedule ID with the Row ID for updating the database later
 
             saveMap((int)textInfo[0], newRowId);
         }
-
     }
 
     public void saveMap(int val, long id){
