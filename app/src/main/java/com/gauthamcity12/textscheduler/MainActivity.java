@@ -21,6 +21,7 @@ import android.telephony.SmsManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.textservice.TextInfo;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -67,8 +68,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        textDB = new TextInfoStore(getBaseContext()); // initializing the db helper
-        db = textDB.getWritableDatabase(); // getting the database in a writeable state
+        textDB = TextInfoStore.getInstance(this); // initializing the db helper
 
         Button dateSet = (Button)findViewById(R.id.dateButton);
         Button timeSet = (Button)findViewById(R.id.timeButton);
@@ -255,8 +255,10 @@ public class MainActivity extends Activity {
             values.put(TextInfoStore.KEY_SENTSTATUS, (String)textInfo[6]); // saves whether the text has been sent or not
             values.put(TextInfoStore.KEY_TIMESTAMP, String.valueOf(textInfo[7])); // saves the TimeStamp
 
+            db = textDB.getWritableDatabase(); // getting the database in a writeable state
             long newRowId = db.insert(TextInfoStore.TABLE_NAME, null, values); // inserts into the database
             //rowMap.put((int)textInfo[0], newRowId); // maps the Text Schedule ID with the Row ID for updating the database later
+            db.close();
 
             saveMap((int)textInfo[0], newRowId);
         }

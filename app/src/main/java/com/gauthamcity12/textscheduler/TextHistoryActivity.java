@@ -51,7 +51,7 @@ public class TextHistoryActivity extends Activity {
         ArrayList<TextData> list = new ArrayList<>();
 
         String query = "SELECT * FROM "+TextInfoStore.TABLE_NAME;
-        SQLiteDatabase db = MainActivity.getDB();
+        SQLiteDatabase db = TextInfoStore.getInstance(this).getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
 
         TextData tdat;

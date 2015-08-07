@@ -71,7 +71,7 @@ public class TextScheduleService extends IntentService {
         manager.notify(rand.nextInt(), finished);
 
         // Update database with sent status
-        SQLiteDatabase db = MainActivity.getDB();
+        SQLiteDatabase db = TextInfoStore.getInstance(this).getWritableDatabase();
         ContentValues newValue = new ContentValues();
         newValue.put(TextInfoStore.KEY_SENTSTATUS, (String) textInfo[6]);
 
@@ -83,6 +83,7 @@ public class TextScheduleService extends IntentService {
 
         db.update(TextInfoStore.TABLE_NAME, newValue, TextInfoStore.KEY_ID+"="+rowId, null); // updated database since text was sent
 
+        db.close();
         //remove mapping from hash now that text is sent
         deleteMapping(key);
 

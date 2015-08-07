@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.view.textservice.TextInfo;
 import android.widget.Toast;
 
 /**
@@ -25,7 +26,19 @@ public class TextInfoStore extends SQLiteOpenHelper {
             KEY_DATE + " VARCHAR(20) NOT NULL, " + KEY_TIME + " VARCHAR(10) NOT NULL, " + KEY_CONTENT + " VARCHAR(120) NOT NULL, " + KEY_CONTACT + " VARCHAR(30) NOT NULL, "+
             KEY_SENTSTATUS + " VARCHAR(5) NOT NULL, " + KEY_TIMESTAMP + " VARCHAR(30) NOT NULL);";
 
-    public TextInfoStore(Context context){
+    private static TextInfoStore helperInstance;
+
+    public static synchronized TextInfoStore getInstance(Context context) {
+
+        // Use the application context, which will ensure that you
+        // don't accidentally leak an Activity's context.
+        if (helperInstance == null) {
+            helperInstance = new TextInfoStore(context.getApplicationContext());
+        }
+        return helperInstance;
+    }
+
+    private TextInfoStore(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 

@@ -36,8 +36,10 @@ public class RescheduleService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         String query = "SELECT * FROM " + TextInfoStore.TABLE_NAME + " WHERE " + TextInfoStore.KEY_SENTSTATUS + " = 'false'";
 
-        TextInfoStore textDB = new TextInfoStore(getApplicationContext()); // initializing the db helper
+        TextInfoStore textDB = TextInfoStore.getInstance(getApplicationContext()); // initializing the db helper
         SQLiteDatabase db = textDB.getWritableDatabase();
+        //SQLiteDatabase db = openOrCreateDatabase("TextSchedulerDB.db", SQLiteDatabase.OPEN_READWRITE, null);
+
 
         Cursor cursor = db.rawQuery(query, null);
         Object[] textInfo = new Object[8];
@@ -47,7 +49,7 @@ public class RescheduleService extends IntentService {
 
         if(cursor.moveToFirst()){ // checks the first row
             setup(textInfo, cursor, textIntent);
-
+            Log.d((String)textInfo[1], "textInfo");
             if(Long.parseLong((String)textInfo[7]) < Calendar.getInstance().getTimeInMillis()){ //if the scheduled time has already passed, send the text.
                 sendText(textInfo);
                 Log.d("Reboot received bruh", "sent text");
@@ -74,6 +76,7 @@ public class RescheduleService extends IntentService {
             }
         }
 
+        db.close();
         WakeLocker.completeWakefulIntent(intent); // Closes the WakeLock after the service is performed
 
     }
