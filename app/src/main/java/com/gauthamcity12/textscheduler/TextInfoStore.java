@@ -31,13 +31,6 @@ public class TextInfoStore extends SQLiteOpenHelper {
     private static TextInfoStore helperInstance;
 
     public static synchronized TextInfoStore getInstance() {
-
-        // Use the application context, which will ensure that you
-        // don't accidentally leak an Activity's context.
-//        if(TextApp.getAppContext() == null){
-//            TextApp myApp = new TextApp();
-//            Log.d("made new bruh", "new again");
-//        }
         if (helperInstance == null) {
             helperInstance = new TextInfoStore(TextApp.getAppContext());
         }

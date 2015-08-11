@@ -1,7 +1,6 @@
 package com.gauthamcity12.textscheduler;
 
 import android.app.AlarmManager;
-import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -12,13 +11,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.IBinder;
 import android.telephony.SmsManager;
 import android.util.Log;
-import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Random;
@@ -34,28 +29,14 @@ public class RescheduleService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-//        NotificationManager manager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-//        Notification finished = new Notification.Builder(this)
-//                .setAutoCancel(true)
-//                .setContentTitle("Click to reschedule texts.").setSmallIcon(R.drawable.ic_history_white_24dp).build();
-//
-//        Intent notificationIntent = new Intent(this, TextHistoryActivity.class);
-//        PendingIntent pNot = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-//        finished.contentIntent = pNot;
-//
-//        Random rand = new Random();
-//        manager.notify(rand.nextInt(), finished);
-
         String query = "SELECT * FROM " + TextInfoStore.TABLE_NAME + " WHERE " + TextInfoStore.KEY_SENTSTATUS + " = 'false'";
         TextApp myApp = new TextApp();
         TextInfoStore textDB = TextInfoStore.getInstance(); // initializing the db helper
         SQLiteDatabase db = textDB.getWritableDatabase();
-        //SQLiteDatabase db = openOrCreateDatabase("TextSchedulerDB.db", SQLiteDatabase.OPEN_READWRITE, null);
 
         Cursor cursor = db.rawQuery(query, null);
         Object[] textInfo = new Object[8];
 
-        ArrayList<TextData> list = new ArrayList<>();
         Intent textIntent = new Intent(this, WakeLocker.class);
 
         if(cursor.moveToFirst()){ // checks the first row
@@ -68,6 +49,7 @@ public class RescheduleService extends Service {
                 Log.d("Reboot received bruh", "sent text");
             }
             else{
+                populateIntent(textIntent, textInfo);
                 PendingIntent pendingText = PendingIntent.getBroadcast(this, (int)textInfo[0], textIntent, 0); // creates a new intent with unique request codes
                 AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
                 alarmManager.set(alarmManager.RTC_WAKEUP, Long.parseLong((String)textInfo[7]), pendingText);
@@ -83,6 +65,7 @@ public class RescheduleService extends Service {
                 sendText(textInfo);
             }
             else{
+                populateIntent(textIntent, textInfo);
                 PendingIntent pendingText = PendingIntent.getBroadcast(this, (int)textInfo[0], textIntent, 0); // creates a new intent with unique request codes
                 AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
                 alarmManager.set(alarmManager.RTC_WAKEUP, Long.parseLong((String)textInfo[7]), pendingText);
@@ -90,7 +73,6 @@ public class RescheduleService extends Service {
         }
 
         db.close();
-        //WakeLocker.completeWakefulIntent(intent); // Closes the WakeLock after the service is performed
         stopSelf();
         return START_STICKY;
     }
@@ -171,5 +153,22 @@ public class RescheduleService extends Service {
         editor.remove(key+"int");
         editor.remove(key+"long");
         editor.commit();
+    }
+
+    public void populateIntent(Intent textIntent, Object[] textInfo){
+        int counter = 0;
+        for(Object s : textInfo){ // append all textInformation to Intent
+            if(counter == 0){
+                textIntent.putExtra("Text Info: "+counter, String.valueOf((int)s));
+            }
+            else if(counter == 7){ //appends the timestamp value to the textInfo array
+                textIntent.putExtra("Text Info: "+counter, (String)s);
+            }
+            else{
+                textIntent.putExtra("Text Info: "+counter, (String)s);
+            }
+
+            counter++;
+        }
     }
 }

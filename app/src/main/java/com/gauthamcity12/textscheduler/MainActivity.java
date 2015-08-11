@@ -122,6 +122,7 @@ public class MainActivity extends Activity {
         tpDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                isNow = false;
                 EditText timeSet = (EditText)findViewById(R.id.timeText);
                 Calendar currentCal = Calendar.getInstance();
                 String phase = "";
@@ -149,8 +150,12 @@ public class MainActivity extends Activity {
                     }
                     else{
                         phase = " AM";
+                        if(hour == 12){
+                            phase = " PM";
+                        }
                     }
                     if(hour == 0){
+                        phase =  " AM";
                         hour = 12;
                     }
                     if(isToday && hour == currentCal.get(Calendar.HOUR_OF_DAY) && minute == currentCal.get(Calendar.MINUTE)){
