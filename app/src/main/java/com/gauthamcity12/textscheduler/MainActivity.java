@@ -36,6 +36,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Random;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 
 public class MainActivity extends Activity {
@@ -90,6 +92,14 @@ public class MainActivity extends Activity {
 
         //Create Preferences File
         settings = this.getSharedPreferences(PREFS_NAME, 0);
+
+        AdView mAdView = (AdView) findViewById(R.id.adView);
+        //AdRequest adRequest = new AdRequest.Builder().build();
+        //mAdView.loadAd(adRequest);
+        AdRequest request = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)        // All emulators// My Galaxy Nexus test phone
+                .build();
+        mAdView.loadAd(request);
 
     }
 
