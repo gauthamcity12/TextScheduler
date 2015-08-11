@@ -3,6 +3,8 @@ package com.gauthamcity12.textscheduler;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.app.ActionBar;
@@ -18,6 +20,7 @@ import android.provider.ContactsContract;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.SmsManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -62,13 +65,16 @@ public class MainActivity extends Activity {
     private int PICK_CONTACT = 1;
     protected static String PREFS_NAME = "HASHMAPVALS";
     private SharedPreferences settings;
+    private SharedPreferences.Editor editor;
+    private boolean flag = false;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        textDB = TextInfoStore.getInstance(this); // initializing the db helper
+        TextApp myApp = new TextApp();
+        textDB = TextInfoStore.getInstance(); // initializing the db helper
 
         Button dateSet = (Button)findViewById(R.id.dateButton);
         Button timeSet = (Button)findViewById(R.id.timeButton);
@@ -84,6 +90,7 @@ public class MainActivity extends Activity {
 
         //Create Preferences File
         settings = this.getSharedPreferences(PREFS_NAME, 0);
+
     }
 
     @Override
@@ -317,7 +324,15 @@ public class MainActivity extends Activity {
         }
     }
 
-    public static SQLiteDatabase getDB(){
-        return db;
+    public long getRowID(int key){
+        long val = settings.getLong(key + "long", 0);
+        return val;
+    }
+
+    // text has been sent, no need to store value in preferences file
+    public void deleteMapping(int key){
+        editor.remove(key+"int");
+        editor.remove(key+"long");
+        editor.commit();
     }
 }

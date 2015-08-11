@@ -3,22 +3,26 @@ package com.gauthamcity12.textscheduler;
 /**
  * Created by gauthamcity12 on 08/03/15.
  */
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
 import android.widget.Toast;
 
-public class BootReceiver extends WakefulBroadcastReceiver{
+public class BootReceiver extends BroadcastReceiver{
 
     @Override // TODO: NEED TO ADD DB RETRIEVAL AND RESETTING ALARM
     public void onReceive(Context context, Intent intent) {
 
         if("android.intent.action.BOOT_COMPLETED".equals(intent.getAction())) {
             Intent resetService = new Intent(context, RescheduleService.class);
-            startWakefulService(context, resetService);
+//            TextApp myApp = new TextApp();
+//            myApp.setContext(context);
+
+            Log.d("went to boot bruh", "booter");
+            context.startService(resetService);
         }
 //        Intent service = new Intent(context, TextScheduleService.class);
 //        for(int i = 0; i < 8; i++){

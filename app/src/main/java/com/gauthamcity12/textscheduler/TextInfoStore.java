@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.textservice.TextInfo;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 /**
  * Created by gauthamcity12 on 6/16/15.
  */
@@ -28,12 +30,16 @@ public class TextInfoStore extends SQLiteOpenHelper {
 
     private static TextInfoStore helperInstance;
 
-    public static synchronized TextInfoStore getInstance(Context context) {
+    public static synchronized TextInfoStore getInstance() {
 
         // Use the application context, which will ensure that you
         // don't accidentally leak an Activity's context.
+//        if(TextApp.getAppContext() == null){
+//            TextApp myApp = new TextApp();
+//            Log.d("made new bruh", "new again");
+//        }
         if (helperInstance == null) {
-            helperInstance = new TextInfoStore(context.getApplicationContext());
+            helperInstance = new TextInfoStore(TextApp.getAppContext());
         }
         return helperInstance;
     }

@@ -1,6 +1,14 @@
 package com.gauthamcity12.textscheduler;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
@@ -11,13 +19,18 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.telephony.SmsManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.Toast;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Random;
 
 
 public class TextHistoryActivity extends Activity {
@@ -25,6 +38,9 @@ public class TextHistoryActivity extends Activity {
     private RecyclerView recyclerView;
     private LinearLayoutManager llmanager;
     private TextHistoryRecyclerAdapter adapter;
+    private SharedPreferences settings;
+    private SharedPreferences.Editor editor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +55,7 @@ public class TextHistoryActivity extends Activity {
         adapter = new TextHistoryRecyclerAdapter(getTexts(), this);
         recyclerView.setAdapter(adapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+
     }
 
     @Override
@@ -51,7 +68,7 @@ public class TextHistoryActivity extends Activity {
         ArrayList<TextData> list = new ArrayList<>();
 
         String query = "SELECT * FROM "+TextInfoStore.TABLE_NAME;
-        SQLiteDatabase db = TextInfoStore.getInstance(this).getWritableDatabase();
+        SQLiteDatabase db = TextInfoStore.getInstance().getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
 
         TextData tdat;
@@ -73,6 +90,8 @@ public class TextHistoryActivity extends Activity {
             list.add(new TextData("No Scheduled Texts Yet!", "", "", "", 0));
         }
         Collections.sort(list);
+
+        db.close();
         return list;
 
     }

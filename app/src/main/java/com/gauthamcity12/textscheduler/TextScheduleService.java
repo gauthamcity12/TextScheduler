@@ -71,7 +71,7 @@ public class TextScheduleService extends IntentService {
         manager.notify(rand.nextInt(), finished);
 
         // Update database with sent status
-        SQLiteDatabase db = TextInfoStore.getInstance(this).getWritableDatabase();
+        SQLiteDatabase db = TextInfoStore.getInstance().getWritableDatabase();
         ContentValues newValue = new ContentValues();
         newValue.put(TextInfoStore.KEY_SENTSTATUS, (String) textInfo[6]);
 

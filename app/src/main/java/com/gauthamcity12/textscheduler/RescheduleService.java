@@ -5,6 +5,7 @@ import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.Service;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -13,8 +14,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.IBinder;
 import android.telephony.SmsManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -23,23 +26,31 @@ import java.util.Random;
 /**
  * Created by gauthamcity12 on 8/5/15.
  */
-public class RescheduleService extends IntentService {
+public class RescheduleService extends Service {
 
     private SharedPreferences settings;
     private SharedPreferences.Editor editor;
 
-    public RescheduleService(){
-        super("RescheduleService Started");
-    }
-
     @Override
-    protected void onHandleIntent(Intent intent) {
-        String query = "SELECT * FROM " + TextInfoStore.TABLE_NAME + " WHERE " + TextInfoStore.KEY_SENTSTATUS + " = 'false'";
+    public int onStartCommand(Intent intent, int flags, int startId) {
 
-        TextInfoStore textDB = TextInfoStore.getInstance(getApplicationContext()); // initializing the db helper
+//        NotificationManager manager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+//        Notification finished = new Notification.Builder(this)
+//                .setAutoCancel(true)
+//                .setContentTitle("Click to reschedule texts.").setSmallIcon(R.drawable.ic_history_white_24dp).build();
+//
+//        Intent notificationIntent = new Intent(this, TextHistoryActivity.class);
+//        PendingIntent pNot = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+//        finished.contentIntent = pNot;
+//
+//        Random rand = new Random();
+//        manager.notify(rand.nextInt(), finished);
+
+        String query = "SELECT * FROM " + TextInfoStore.TABLE_NAME + " WHERE " + TextInfoStore.KEY_SENTSTATUS + " = 'false'";
+        TextApp myApp = new TextApp();
+        TextInfoStore textDB = TextInfoStore.getInstance(); // initializing the db helper
         SQLiteDatabase db = textDB.getWritableDatabase();
         //SQLiteDatabase db = openOrCreateDatabase("TextSchedulerDB.db", SQLiteDatabase.OPEN_READWRITE, null);
-
 
         Cursor cursor = db.rawQuery(query, null);
         Object[] textInfo = new Object[8];
@@ -48,8 +59,10 @@ public class RescheduleService extends IntentService {
         Intent textIntent = new Intent(this, WakeLocker.class);
 
         if(cursor.moveToFirst()){ // checks the first row
-            setup(textInfo, cursor, textIntent);
-            Log.d((String)textInfo[1], "textInfo");
+            textInfo = setup(textInfo, cursor, textIntent);
+            Log.d((String) textInfo[1], "textInfo");
+            Log.d("TextApp", textInfo[0] + " " + textInfo[1] + " " + textInfo[7]);
+
             if(Long.parseLong((String)textInfo[7]) < Calendar.getInstance().getTimeInMillis()){ //if the scheduled time has already passed, send the text.
                 sendText(textInfo);
                 Log.d("Reboot received bruh", "sent text");
@@ -64,7 +77,7 @@ public class RescheduleService extends IntentService {
         }
         while (cursor.moveToNext()){ // checks the rest of the rows
             textIntent = new Intent(this, WakeLocker.class);
-            setup(textInfo, cursor, textIntent);
+            textInfo = setup(textInfo, cursor, textIntent);
 
             if(Long.parseLong((String)textInfo[7]) < Calendar.getInstance().getTimeInMillis()){ // if the time has already passed, send the text.
                 sendText(textInfo);
@@ -77,11 +90,17 @@ public class RescheduleService extends IntentService {
         }
 
         db.close();
-        WakeLocker.completeWakefulIntent(intent); // Closes the WakeLock after the service is performed
-
+        //WakeLocker.completeWakefulIntent(intent); // Closes the WakeLock after the service is performed
+        stopSelf();
+        return START_STICKY;
     }
 
-    public void setup(Object[] textInfo, Cursor cursor, Intent textIntent){
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
+    public Object[] setup(Object[] textInfo, Cursor cursor, Intent textIntent){
         textInfo = new Object[8];
         textInfo[0] = cursor.getInt(0);
         textInfo[1] = cursor.getString(1);
@@ -105,18 +124,17 @@ public class RescheduleService extends IntentService {
             }
             counter++;
         }
+        return textInfo;
     }
 
     public void sendText(Object[] textInfo){
         SmsManager smsManager = SmsManager.getDefault();
         smsManager.sendTextMessage((String) textInfo[1], null, (String) textInfo[4], null, null); // sends the actual text
         textInfo[6] = "true";
-
-        Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.ic_check);
         NotificationManager manager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         Notification finished = new Notification.Builder(this)
                 .setAutoCancel(true)
-                .setContentTitle("Scheduled Text sent to " + textInfo[5]).setSmallIcon(R.drawable.ic_done_white_24dp).build();
+                .setContentTitle("Since device was off: scheduled text was just sent to " + textInfo[5]).setSmallIcon(R.drawable.ic_done_white_24dp).build();
 
         Intent notificationIntent = new Intent(this, TextHistoryActivity.class);
         PendingIntent pNot = PendingIntent.getActivity(this, 0, notificationIntent, 0);
@@ -126,7 +144,7 @@ public class RescheduleService extends IntentService {
         manager.notify(rand.nextInt(), finished);
 
         // Update database with sent status
-        SQLiteDatabase db = MainActivity.getDB();
+        SQLiteDatabase db = TextInfoStore.getInstance().getWritableDatabase();
         ContentValues newValue = new ContentValues();
         newValue.put(TextInfoStore.KEY_SENTSTATUS, (String) textInfo[6]);
 
@@ -136,10 +154,11 @@ public class RescheduleService extends IntentService {
         int key = (int)textInfo[0];
         long rowId = getRowID(key);
 
-        db.update(TextInfoStore.TABLE_NAME, newValue, TextInfoStore.KEY_ID+"="+rowId, null); // updated database since text was sent
+        db.update(TextInfoStore.TABLE_NAME, newValue, TextInfoStore.KEY_ID + "=" + rowId, null); // updated database since text was sent
 
         //remove mapping from hash now that text is sent
         deleteMapping(key);
+        db.close();
     }
 
     public long getRowID(int key){

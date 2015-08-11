@@ -63,7 +63,7 @@ public class TextHistoryRecyclerAdapter extends RecyclerView.Adapter<TextDataVie
                     }
                 });
 
-                SQLiteDatabase db = MainActivity.getDB();
+                SQLiteDatabase db = TextInfoStore.getInstance().getWritableDatabase();
                 SharedPreferences settings = context.getSharedPreferences("HASHMAPVALS", 0);
                 long rowId = settings.getLong(tdat.getSessionID()+"long", 0);
                 try{
@@ -72,6 +72,7 @@ public class TextHistoryRecyclerAdapter extends RecyclerView.Adapter<TextDataVie
                 catch(Exception e){
                     e.printStackTrace();
                 }
+                db.close();
 
                 Intent toStop = new Intent(context, WakeLocker.class);
                 PendingIntent pStop = PendingIntent.getBroadcast(context, tdat.getSessionID(), toStop, 0);
