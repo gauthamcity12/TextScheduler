@@ -1,4 +1,4 @@
-package com.gauthamcity12.textscheduler;
+package com.gauthamcity12.TextYaLater;
 
 /**
  * Created by gauthamcity12 on 08/03/15.
@@ -6,10 +6,7 @@ package com.gauthamcity12.textscheduler;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-import android.widget.Toast;
 
 public class BootReceiver extends BroadcastReceiver{
 
@@ -21,13 +18,7 @@ public class BootReceiver extends BroadcastReceiver{
 //            TextApp myApp = new TextApp();
 //            myApp.setContext(context);
 
-            Log.d("went to boot bruh", "booter");
             context.startService(resetService);
         }
-//        Intent service = new Intent(context, TextScheduleService.class);
-//        for(int i = 0; i < 8; i++){
-//            service.putExtra("Text Info: "+i, intent.getStringExtra("Text Info: "+i)); // repopulating the extras into the new intent
-//        }
-//        startWakefulService(context, service); // Holds a wake lock until the service is complete
     }
 }

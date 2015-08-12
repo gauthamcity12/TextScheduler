@@ -1,13 +1,9 @@
-package com.gauthamcity12.textscheduler;
+package com.gauthamcity12.TextYaLater;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import android.view.textservice.TextInfo;
-import android.widget.Toast;
-
-import org.w3c.dom.Text;
 
 /**
  * Created by gauthamcity12 on 6/16/15.

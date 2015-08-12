@@ -1,4 +1,4 @@
-package com.gauthamcity12.textscheduler;
+package com.gauthamcity12.TextYaLater;
 
 import android.app.AlarmManager;
 import android.app.Notification;
@@ -13,8 +13,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.IBinder;
 import android.telephony.SmsManager;
-import android.util.Log;
-import java.util.ArrayList;
+
 import java.util.Calendar;
 import java.util.Random;
 
@@ -41,20 +40,15 @@ public class RescheduleService extends Service {
 
         if(cursor.moveToFirst()){ // checks the first row
             textInfo = setup(textInfo, cursor, textIntent);
-            Log.d((String) textInfo[1], "textInfo");
-            Log.d("TextApp", textInfo[0] + " " + textInfo[1] + " " + textInfo[7]);
 
             if(Long.parseLong((String)textInfo[7]) < Calendar.getInstance().getTimeInMillis()){ //if the scheduled time has already passed, send the text.
                 sendText(textInfo);
-                Log.d("Reboot received bruh", "sent text");
             }
             else{
                 populateIntent(textIntent, textInfo);
                 PendingIntent pendingText = PendingIntent.getBroadcast(this, (int)textInfo[0], textIntent, 0); // creates a new intent with unique request codes
                 AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
                 alarmManager.set(alarmManager.RTC_WAKEUP, Long.parseLong((String)textInfo[7]), pendingText);
-                Log.d("Reboot received bruh", "set alarm");
-
             }
         }
         while (cursor.moveToNext()){ // checks the rest of the rows
@@ -116,7 +110,9 @@ public class RescheduleService extends Service {
         NotificationManager manager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         Notification finished = new Notification.Builder(this)
                 .setAutoCancel(true)
-                .setContentTitle("Since device was off: scheduled text was just sent to " + textInfo[5]).setSmallIcon(R.drawable.ic_done_white_24dp).build();
+                .setContentTitle("Text Sent!")
+                .setContentText("Since device was off: scheduled text was just sent to " + textInfo[5])
+                .setSmallIcon(R.drawable.ic_done_white_24dp).build();
 
         Intent notificationIntent = new Intent(this, TextHistoryActivity.class);
         PendingIntent pNot = PendingIntent.getActivity(this, 0, notificationIntent, 0);

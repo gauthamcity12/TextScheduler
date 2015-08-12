@@ -1,4 +1,4 @@
-package com.gauthamcity12.textscheduler;
+package com.gauthamcity12.TextYaLater;
 
 import android.app.Application;
 import android.content.Context;

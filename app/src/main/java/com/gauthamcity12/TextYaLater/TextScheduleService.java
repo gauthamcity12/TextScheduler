@@ -1,10 +1,9 @@
-package com.gauthamcity12.textscheduler;
+package com.gauthamcity12.TextYaLater;
 
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -12,14 +11,7 @@ import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.support.v4.app.NotificationCompat;
 import android.telephony.SmsManager;
-import android.view.textservice.TextInfo;
-import android.widget.Toast;
-
-import org.w3c.dom.Text;
 
 import java.util.Random;
 
@@ -27,17 +19,6 @@ import java.util.Random;
  * Created by gauthamcity12 on 7/12/15.
  */
 public class TextScheduleService extends IntentService {
-
-    /*public void onReceive(Context context, Intent intent){
-        String[] textInfo = new String[5];
-        for(int i = 0; i < 5; i++){
-            textInfo[i] = intent.getStringExtra("Text Info: "+i);
-        }
-        SmsManager smsManager = SmsManager.getDefault();
-        smsManager.sendTextMessage(textInfo[1], null, textInfo[4], null, null);
-        //Toast.makeText(MainActivity.class, "Sending text now...", Toast.LENGTH_SHORT).show();
-    }
-    */
 
     private SharedPreferences settings;
     private SharedPreferences.Editor editor;
@@ -61,7 +42,9 @@ public class TextScheduleService extends IntentService {
         NotificationManager manager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         Notification finished = new Notification.Builder(this)
                 .setAutoCancel(true)
-                .setContentTitle("Scheduled Text sent to " + textInfo[5]).setSmallIcon(R.drawable.ic_done_white_24dp).build();
+                .setContentTitle("Text Sent!")
+                .setContentText("Scheduled Text sent to " + textInfo[5])
+                .setSmallIcon(R.drawable.ic_done_white_24dp).build();
 
         Intent notificationIntent = new Intent(this, TextHistoryActivity.class);
         PendingIntent pNot = PendingIntent.getActivity(this, 0, notificationIntent, 0);

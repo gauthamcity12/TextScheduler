@@ -110,12 +110,13 @@
     <EditText android:id="@+id/messageText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Enter Message Text"
+        android:hint="Enter Message Text"
         android:textColor="#FFFFFF"
         android:layout_marginTop="5dp"
         android:maxLength="200"
         android:maxLines="4"
         android:selectAllOnFocus="true"
+        android:onClick="pauseAd"
         android:layout_gravity="center_horizontal" />
 
     <Button android:id="@+id/messageButton"

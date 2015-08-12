@@ -1,4 +1,4 @@
-package com.gauthamcity12.textscheduler;
+package com.gauthamcity12.TextYaLater;
 
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;

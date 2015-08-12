@@ -1,11 +1,10 @@
-package com.gauthamcity12.textscheduler;
+package com.gauthamcity12.TextYaLater;
 
 /**
  * Created by gauthamcity12 on 7/14/15.
  */
 import android.content.Context;
 import android.content.Intent;
-import android.os.PowerManager;
 import android.support.v4.content.WakefulBroadcastReceiver;
 
 public class WakeLocker extends WakefulBroadcastReceiver{

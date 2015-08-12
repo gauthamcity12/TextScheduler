@@ -1,40 +1,29 @@
-package com.gauthamcity12.textscheduler;
+package com.gauthamcity12.TextYaLater;
 
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
-import android.app.ActionBar;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.telephony.SmsManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.textservice.TextInfo;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Random;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -67,9 +56,8 @@ public class MainActivity extends Activity {
     private int PICK_CONTACT = 1;
     protected static String PREFS_NAME = "HASHMAPVALS";
     private SharedPreferences settings;
-    private SharedPreferences.Editor editor;
-    private boolean flag = false;
-
+    private AdView mAdView;
+    private AdRequest request;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,14 +81,13 @@ public class MainActivity extends Activity {
         //Create Preferences File
         settings = this.getSharedPreferences(PREFS_NAME, 0);
 
-        AdView mAdView = (AdView) findViewById(R.id.adView);
+        mAdView = (AdView) findViewById(R.id.adView);
         //AdRequest adRequest = new AdRequest.Builder().build();
         //mAdView.loadAd(adRequest);
-        AdRequest request = new AdRequest.Builder()
+        request = new AdRequest.Builder()
                 .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)        // All emulators// My Galaxy Nexus test phone
                 .build();
         mAdView.loadAd(request);
-
     }
 
     @Override
@@ -128,6 +115,10 @@ public class MainActivity extends Activity {
     }
 
     public void saveTime(View view){
+        if(mAdView.getVisibility() != View.VISIBLE) {
+            mAdView.loadAd(request);
+            mAdView.setVisibility(View.VISIBLE);
+        }
         Calendar newCal = Calendar.getInstance();
         tpDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
             @Override
@@ -185,6 +176,10 @@ public class MainActivity extends Activity {
     }
 
     public void saveDate(View view){
+        if(mAdView.getVisibility() != View.VISIBLE) {
+            mAdView.loadAd(request);
+            mAdView.setVisibility(View.VISIBLE);
+        }
         Calendar newCal = Calendar.getInstance();
         dpDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -220,6 +215,10 @@ public class MainActivity extends Activity {
     }
 
     public void saveMessage(View view){
+        if(mAdView.getVisibility() != View.VISIBLE) {
+            mAdView.loadAd(request);
+            mAdView.setVisibility(View.VISIBLE);
+        }
         messageSet.setFocusable(true); // pulls the focus off of the edit text
         if(textInfo[1] == null){ // Error check to verify a contact was chosen before message is sent
             Toast.makeText(getBaseContext(), "Please Choose a Contact to Text", Toast.LENGTH_SHORT).show();
@@ -290,12 +289,15 @@ public class MainActivity extends Activity {
         SharedPreferences.Editor editor = settings.edit();
         String identifier = textInfo[0]+"";
         editor.putInt(identifier+"int", val);
-        editor.putLong(identifier+"long", id);
+        editor.putLong(identifier + "long", id);
         boolean result = editor.commit();
-        Toast.makeText(getBaseContext(), result+"", Toast.LENGTH_SHORT).show();
     }
 
     public void saveContact(View view){
+        if(mAdView.getVisibility() != View.VISIBLE) {
+            mAdView.loadAd(request);
+            mAdView.setVisibility(View.VISIBLE);
+        }
         Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
         startActivityForResult(intent, PICK_CONTACT);
     }
@@ -329,7 +331,6 @@ public class MainActivity extends Activity {
                     switch (type) {
                         case ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE:
                             textInfo[1] = number; // saves the contact's phone number
-                            Toast.makeText(getBaseContext(), number, Toast.LENGTH_SHORT).show();
                             break;
                     }
                 }
@@ -339,15 +340,9 @@ public class MainActivity extends Activity {
         }
     }
 
-    public long getRowID(int key){
-        long val = settings.getLong(key + "long", 0);
-        return val;
+    public void pauseAd(View view){
+        mAdView.destroy();
+        mAdView.setVisibility(View.GONE);
     }
 
-    // text has been sent, no need to store value in preferences file
-    public void deleteMapping(int key){
-        editor.remove(key+"int");
-        editor.remove(key+"long");
-        editor.commit();
-    }
 }

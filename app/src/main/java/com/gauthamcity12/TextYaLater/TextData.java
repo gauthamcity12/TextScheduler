@@ -1,4 +1,4 @@
-package com.gauthamcity12.textscheduler;
+package com.gauthamcity12.TextYaLater;
 
 /**
  * Created by gauthamcity12 on 7/19/15.
@@ -52,12 +52,14 @@ public class TextData implements Comparable{
         TextData other = ((TextData)another);
         String date1 = this.getDate();
         String date2 = other.getDate();
+        int mIndex = this.getTime().indexOf('M');
+        int mIndex2 = other.getTime().indexOf('M');
         int val1 = Integer.parseInt(date1.substring(0,1));
         int val2 = Integer.parseInt(date2.substring(0,1));
 
         if(this.getStatus() == true){
             if(other.getStatus() == true){
-                if(Character.isDigit(date1.charAt(1))){
+                if(Character.isDigit(date1.charAt(1))){ // Checks the month
                     val1 = Integer.parseInt(date1.substring(0,2));
                 }
                 if(Character.isDigit(date2.charAt(1))){
@@ -69,7 +71,7 @@ public class TextData implements Comparable{
                 else if(val1 > val2){
                     return 1;
                 }
-                else{
+                else{ // Checks the day
                     if(date1.contains("-")){
                         int firstIndex = date1.indexOf("-");
                         int secondIndex = date1.lastIndexOf("-");
@@ -86,6 +88,12 @@ public class TextData implements Comparable{
                             return 1;
                         }
                         else{
+                            if(this.getTime().charAt(mIndex-1) == 'A' && other.getTime().charAt(mIndex2-1) == 'P'){
+                                return -1;
+                            }
+                            if(this.getTime().charAt(mIndex-1) == 'P' && other.getTime().charAt(mIndex2-1) == 'A'){
+                                return 1;
+                            }
                             firstIndex = this.getTime().indexOf(":");
                             secondIndex = other.getTime().indexOf(":");
                             val1 = Integer.parseInt(this.getTime().substring(0, firstIndex));
@@ -105,7 +113,7 @@ public class TextData implements Comparable{
         }
         else if(this.getStatus() == false){
             if(other.getStatus() == false){
-                if(Character.isDigit(date1.charAt(1))){
+                if(Character.isDigit(date1.charAt(1))){ // checks the month
                     val1 = Integer.parseInt(date1.substring(0,2));
                 }
                 if(Character.isDigit(date2.charAt(1))){
@@ -118,7 +126,7 @@ public class TextData implements Comparable{
                     return 1;
                 }
                 else {
-                    if (date1.contains("-")) {
+                    if (date1.contains("-")) { // checks the day
                         int firstIndex = date1.indexOf("-");
                         int secondIndex = date1.lastIndexOf("-");
                         val1 = Integer.parseInt(date1.substring(firstIndex + 1, secondIndex));
